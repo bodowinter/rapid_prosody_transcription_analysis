@@ -1,0 +1,305 @@
+pg2
+names(pg2)
+pg2$cookis
+pg2$cookies
+pg2$url
+pg2$times
+pg2$request
+con = content(pg2)
+head(con)
+str(con)
+pg1 = GET(handle=google,path="/")
+google = handle("http://google.com")#
+pg1 = GET(handle=google,path="/")
+pg2 = GET(handle=google,path="search")
+pg2
+library(httr)
+myapp = oauth_app("twitter",key="lwOCkjidg5k5N5piRFUS822dW",secret="lwOCkjidg5k5N5piRFUS822dW")
+myapp = oauth_app("twitter",#
+	key="lwOCkjidg5k5N5piRFUS822dW",#
+	secret="44qQKnxzO8pMpYgyeNcPNd6aUQZATFXkZUiHip3l3FPABRdBJU")
+sig = sign_oauth1.0(myapp,#
+	token="3239583325-6HSJZSLmKSNlxfHNBuwlypJuzjfRLrCP63w8sM0",#
+	token_secret="6th7sEKbmaHC2Tcj0h0wsc7F8e3B54gdk6ckYvU7AtzGm")
+homeTL = GET("https://api.twitter.com/1.1/statuses/home_timeline.json",sig)
+head(homeTL)
+json1 = content(homeTL)
+json2 = jsonlite::fromJSON(toJSON(json1))
+json2[1,1:4]
+source("http://bioconductor.org/biocLite.R")
+biocLite("rhdf5")
+h5write(c(12,13,14),"example.h5","foo/A",index=list(1:3,1))#
+h5read("example.h5","foo/A")
+install.packages("kernlab")
+library(kernlab)#
+data(spam)#
+set.seed(3435)#
+trainIndicator = rbinom(4601,size=1,prob=0.5)#
+tabl(trainIndicator)
+table(trainIndicator)
+trainSpam = spam[trainIndicator == 1,]#
+testSpam = spam[trainIndicator == 0,]
+names(trainSpam)
+head(trainSpam,2)
+table(trainSpam$type)
+plot(trainSpam$capitalAve ~ trainSpam$type)
+plot(log(trainSpam$capitalAve) ~ trainSpam$type)
+plot(log10(trainSpam$capitalAve+1) ~ trainSpam$type)
+plot(log10(trainSpam[,1:4]+1))
+hCluster = hclust(dist(t(trainSpam[,1:57])))
+plot(hCluster)
+hCluster = hclust(dist(t(log10(trainSpam[,1:55]+1))))
+plot(hCluster)
+trainSpam$numType = as.numeric(trainSpam$type)-1
+costFunction = function(x,y)sum(x != (y>0.5))
+cvError = rep(NA,55)
+library(boot)
+?cv.glm
+for(i in 1:55){#
+	lmFormula = reformulate(names(trainSpam)[i], response="numType")#
+	glmFit = glm(lmFormula,family="binomial",data=tranSpam)#
+	cvError[i] = cv.glm(trainSpam,glmFit,costFunction,2)$delta[2]#
+	}
+trainSpam$numType = as.numeric(trainSpam$type)-1#
+costFunction = function(x,y)sum(x != (y>0.5))#
+cvError = rep(NA,55)#
+library(boot)#
+for(i in 1:55){#
+	lmFormula = reformulate(names(trainSpam)[i], response="numType")#
+	glmFit = glm(lmFormula,family="binomial",data=traniSpam)#
+	cvError[i] = cv.glm(trainSpam,glmFit,costFunction,2)$delta[2]#
+	}
+trainSpam$numType = as.numeric(trainSpam$type)-1#
+costFunction = function(x,y)sum(x != (y>0.5))#
+cvError = rep(NA,55)#
+library(boot)#
+for(i in 1:55){#
+	lmFormula = reformulate(names(trainSpam)[i], response="numType")#
+	glmFit = glm(lmFormula,family="binomial",data=trainSpam)#
+	cvError[i] = cv.glm(trainSpam,glmFit,costFunction,2)$delta[2]#
+	}
+names(trainSpam)[which.min(cvError)]
+predictionModel = glm(NumType ~ charDollar,family="binomial",data=trainSpam)
+predictionModel
+predictionModel = glm(numType ~ charDollar,family="binomial",data=trainSpam)
+predictionModel
+summary(predictionModel)
+predictionTest = predict(predictionModel,testSpam)
+predictionTest
+predictedSpam = rep("nonspam",dim(testSpam)[1])
+predictedSpam
+dim(testSpam)[1]
+dim(testSpam)
+predictedSpam[predictionModel$fitted > 0.5] = "spam"
+predictedSpam
+table(predictedSpam,testSpam$type)
+diag(table(predictedSpam,testSpam$type))
+sum(diag(table(predictedSpam,testSpam$type)))
+sum(diag(table(predictedSpam,testSpam$type)))/sum(table(predictedSpam,testSpam$type))
+1-sum(diag(table(predictedSpam,testSpam$type)))/sum(table(predictedSpam,testSpam$type))
+reformulate("A","B")
+reformulate(c("A","C"),"B")
+x = c(3,2,5,1,4)
+sort(x)
+sort(x,decreasing=F)
+sort(x,decreasing=T)
+x = c(3,2,NA,5,NA,1,NA,4)
+sort(x,decreasing=T)
+sort(x,decreasing=F)
+sort(x,decreasing=F,na.last=T)
+order(x)
+x[order(x)]
+x[order(x,decreasing=T)]
+x[order(x,decreasing=T,na.last=F)]
+set.seed(13435)
+X <- data.frame("var1"=sample(1:5),"var2"=sample(6:10),"var3"=sample(11:15))
+set.seed(13435)#
+X <- data.frame("var1"=sample(1:5),"var2"=sample(6:10),"var3"=sample(11:15))#
+X <- X[sample(1:5),]; X$var2[c(1,3)] = NA
+X
+library(plyr)
+arrange(X,var1)
+arrange(X,desc(var1))
+arrange(X,desc(var2))
+arrange(X,desc(var3))
+getwd()
+220
+200/220
+(200/220)*640
+29+9
+872+652
+getwd()
+R.version.string
+install.packages("swirl")
+library(swirl)
+install_from_swirl("Getting and Cleaning Data")
+swirl()
+mydf <- read.csv("path2csv",stringsAsFactors=FALSE)
+list.files()
+mydf <- read.csv(path2csv,stringsAsFactors=FALSE)
+dim(mydf)
+head(mydf)
+library(dplyr)
+packageVersion("dplyr")
+head(mydf)
+play()
+head(mydf)
+class(mydf)
+str(mydf)
+nxt()
+cran <- tbl_df(mydf)
+rm("mydf")
+play()
+class(cran)
+head(tbl_df)
+str(tbl_df)
+nxt()
+?tbl_df
+tbl_df
+cran
+?select
+play()
+str(cran)
+head(cran)
+cran
+nxt()
+select(cran,ip_id,package,country)
+5:20
+select(cran,r_arch:country)
+select(cran,country:r_arch)
+cran
+select(cran,-time)
+select(cran,-5:20)
+-5:20
+-(5:20)
+select(cran,-(X:size))
+filter(cran,package=="swirl")
+filter(cran,r_version == "3.1.1",country=="US")
+?Comparison
+filter(cran,country=="IN",r_version<="3.0.2")
+filter(cran, country == "US" | country == "IN")
+filter(cran,size>100500,r_os="linux-gnu")
+filter(cran,size>100500,r_os=="linux-gnu")
+is.na(c(3,5,NA,10))
+!is.na(c(3,5,NA,10))
+filter(cran,!is.na(r_version))
+cran2 <- select(cran,size:ip_id)
+arrange(cran2,ip_id)
+arrange(cran2,desc(ip_id))
+arrange(cran2,package,ip_id)
+arrange(cran2,country,desc(r_version),ip_id)
+cran3 <- select(cran,ip_id,package,size)
+cran3
+mutate(cran3,size_mb = size / 2^20)
+mutate(cran3,size_mb = size / 2^20, size_gb = size_mb / 2^10)
+mutate(cran3,correct_size = size + 1000)
+summarize(cran,avg_bytes=mean(size))
+library(dplyr)
+cran <- tbl_df(mydf)
+rm("mydf")
+cran
+?group_by
+play()
+?group_by
+nxt()
+by_package <- group_by(cran,package)
+by_package
+summarize(by_package,mean(size))
+submit()
+?n
+submit()
+pack_sum <- summarize(by_package,#
+                      count = n(),#
+                      unique = n_distinct(ip_id),#
+                      countries = n_distinct(country),#
+                      avg_bytes = mean(size))
+head(pack_sum)
+submit()
+pack_sum
+quantile(pack_sum$count,probs=0.99)
+filter(pack_sum,count>679)
+top_counts <- filter(pack_sum,count>679)
+top_counts
+View(top_counts)
+arrange(top_counts,count)
+arrange(top_counts,count) -> top_counts_sorted
+arrange(top_counts,desc(count)) -> top_counts_sorted
+View(top_counts_sorted)
+quantile(pack_sum$unique,probs=0.99)
+filter(pack_sum,unique>465) -> top_unique
+View(top_unique)
+arrange(top_unique,desc(unique)) -> top_unique_sorted
+View(top_uniqu_sorted)
+View(top_unique_sorted)
+submit()
+View(result3)
+submit()
+library(tidyr)
+students
+?gathr
+?gather
+gather(students,sex,count,-grade)
+students2
+gather(students,sex_class,count,-grade)
+gather(students2,sex_class,count,-grade)
+gather(students2,sex_class,count,-grade) -> res
+res
+?separate
+separate(res,sex_class,c("sex","class"))
+submit()
+students3
+submit()
+?spread
+submit()
+play()
+students2
+nxt()
+submit()
+extract_numeric("class5")
+submit()
+students4
+submit()
+passed
+failed
+mutate(passed,status="passed") -> passed
+mutate(failed,status="failed") -> faild
+mutate(failed,status="failed") -> failed
+bind_rows(passed,failed)
+sat
+?select
+submit()
+## Load required packages:#
+#
+library(lme4)#
+library(ggplot2)#
+library(RColorBrewer)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in RPT summary data:#
+#
+RPT <- read.csv("RPT_summary_processed.csv")
+head(RPT)
+## Bodo Winter#
+## April 25, 2015; Added new analyses: June 19, 2015#
+## Visualizations of Rapid Prosody Transcription Data#
+#########################################################################
+######################## Load in data:#
+#########################################################################
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load:#
+#
+RPT <- read.csv("RPT_individual_processed.csv")#
+#
+## Load in libraries needed:#
+#
+library(lme4)
+head(RPT)

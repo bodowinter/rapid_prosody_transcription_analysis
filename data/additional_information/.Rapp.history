@@ -1,0 +1,1974 @@
+?knnImputation
+continuous_variables <- c("Nsyll","NSyllRealized","Freq",#
+	"LogFreq","MeanPitch","MaxPitch","RMS_amplitude","SyllableDur","VowelDur")
+RPT_KNN <- RPT
+continuous_variables <- c("Nsyll","NSyllRealized","Freq",#
+	"LogFreq","MeanPitch","MaxPitch","RMS_amplitude","SyllableDur","VowelDur")#
+RPT_KNN <- RPT#
+RPT_KNN[,continuous_variables] <- knnImputation(RPT_KNN[,continuous_variables])
+head(RPT_KNN)
+continuous_variables <- c("NSyll","NSyllRealized","Freq",#
+	"LogFreq","MeanPitch","MaxPitch","RMS_amplitude","SyllableDur","VowelDur")#
+RPT_KNN <- RPT
+RPT_KNN[,continuous_variables] <- knnImputation(RPT_KNN[,continuous_variables])
+head(RPT_KNN)
+head(RPT_central)
+continuous_variables <- c("NSyll","LogFreq","MeanPitch","MaxPitch",#
+	"RMS_amplitude","SyllableDur","VowelDur")#
+RPT_KNN <- RPT#
+RPT_KNN[,continuous_variables] <- knnImputation(RPT_KNN[,continuous_variables])
+head(RPT_KNN)
+## Bodo Winter#
+## May 29, 2014; June 19, 2015#
+## First analysis of rapid prosody transcription (RPT) experiment#
+#
+#########################################################################
+######################## Preliminaries:#
+#########################################################################
+#
+## Set "plotting" to TRUE to see plots:#
+#
+plotting = FALSE#
+#
+## Load in data:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+RPT <- read.csv("RPT_summary_processed.csv")#
+#
+## Load in packages:#
+#
+library(DMwR)#
+library(party)#
+#########################################################################
+######################## Imputation:#
+#########################################################################
+#
+## The random forests analysis with "conditional = TRUE" ...#
+## ... (permutation test variable importance) require no missing values.#
+## We will create an additional dataset with imputed Mean and Max Pitch#
+## It's pointless to impute "RangeST" & "SlopeST" since there is not enough data.#
+## For this, we will do a subset analysis on only the accented words.#
+#
+## We will create five data frames:#
+## (1) - central imputed#
+## (2) - knn imputed#
+## (3) - reduced data set (missing values excluded)#
+## (4) - subset of only those for which SlopeST and RangeST is not NA#
+#
+## Only (4) can be used to test the relative ranking of SlopeST, RangeST#
+#
+## How many missing values do we have anyway?#
+#
+sum(is.na(RPT$MeanPitch))				# only 5#
+sum(is.na(RPT$MeanPitch))/nrow(RPT)		# less than 1% of the data#
+RPT[is.na(RPT$MeanPitch),]				# the data for which MeanPitch = NA is also MaxPitch = NA#
+#
+## Impute the missing pitch values:#
+#
+RPT_central <- RPT#
+RPT_central[,c("MeanPitch","MaxPitch")] <- centralImputation(RPT_central[,c("MeanPitch","MaxPitch")])#
+#
+## K-nearest neighbor imputation on all the continuous variables:#
+#
+continuous_variables <- c("NSyll","LogFreq","MeanPitch","MaxPitch",#
+	"RMS_amplitude","SyllableDur","VowelDur")#
+RPT_KNN <- RPT#
+RPT_KNN[,continuous_variables] <- knnImputation(RPT_KNN[,continuous_variables])#
+#
+## Reduced dataset (without the 5 missing data points):#
+#
+RPT_red = RPT[complete.cases(RPT$MeanPitch),]#
+#
+## Make a subset with those for which "RangeST" and "SlopeST" are not NA:#
+#
+RPT_complete = RPT[complete.cases(RPT$RangeST),]#
+#
+## What counts and percentage are those for which we have "RangeST" and "SlopeST"?#
+#
+nrow(RPT_complete)				# 206 rows#
+nrow(RPT_complete)/nrow(RPT)		# 37%
+RPT_accented = RPT[complete.cases(RPT$PitchRangeST),]
+RPT_accented
+nrow(RPT_accented)				# 206 rows
+nrow(RPT_accented)/nrow(RPT)		# 37%
+head(RPT)
+## Bodo Winter#
+## May 29, 2014; June 19, 2015#
+## First analysis of rapid prosody transcription (RPT) experiment#
+#
+#########################################################################
+######################## Preliminaries:#
+#########################################################################
+#
+## Set "plotting" to TRUE to see plots:#
+#
+plotting = FALSE#
+#
+## Load in data:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+RPT <- read.csv("RPT_summary_processed.csv")#
+#
+## Load in packages:#
+#
+library(DMwR)#
+library(party)#
+#########################################################################
+######################## Imputation:#
+#########################################################################
+#
+## The random forests analysis with "conditional = TRUE" ...#
+## ... (permutation test variable importance) require no missing values.#
+## We will create an additional dataset with imputed Mean and Max Pitch#
+## It's pointless to impute "RangeST" & "SlopeST" since there is not enough data.#
+## For this, we will do a subset analysis on only the accented words.#
+#
+## We will create five data frames:#
+## (1) - central imputed#
+## (2) - knn imputed#
+## (3) - reduced data set (missing values excluded)#
+## (4) - subset of only those for which SlopeST and RangeST is not NA#
+#
+## Only (4) can be used to test the relative ranking of SlopeST, RangeST#
+#
+## How many missing values do we have anyway?#
+#
+sum(is.na(RPT$MeanPitch))				# only 5#
+sum(is.na(RPT$MeanPitch))/nrow(RPT)		# less than 1% of the data#
+RPT[is.na(RPT$MeanPitch),]				# the data for which MeanPitch = NA is also MaxPitch = NA#
+#
+## Impute the missing pitch values:#
+#
+RPT_central <- RPT#
+RPT_central[,c("MeanPitch","MaxPitch")] <- centralImputation(RPT_central[,c("MeanPitch","MaxPitch")])#
+#
+## K-nearest neighbor imputation on all the continuous variables:#
+#
+continuous_variables <- c("NSyll","LogFreq","MeanPitch","MaxPitch",#
+	"RMS_amplitude","SyllableDur","VowelDur")#
+RPT_KNN <- RPT#
+RPT_KNN[,continuous_variables] <- knnImputation(RPT_KNN[,continuous_variables])#
+#
+## Reduced dataset (without the 5 missing data points):#
+#
+RPT_red <- RPT[complete.cases(RPT$MeanPitch),]#
+#
+## Make a subset with those for which "RangeST" and "SlopeST" are not NA:#
+#
+RPT_accented <- RPT[complete.cases(RPT$PitchRangeST),]#
+#
+## What counts and percentage are those for which we have "RangeST" and "SlopeST"?#
+#
+nrow(RPT_accented)					# 206 rows#
+nrow(RPT_accented)/nrow(RPT)		# 37% of the entire data set#
+#########################################################################
+######################## Random forests without "RangeST" and "SlopeST"#
+#########################################################################
+#
+## Define "uber formula" that I'll use for those models, containing all variables:#
+#
+the_uber_formula <- as.formula("p_score ~ VowelDur + SyllableDur + RMS_amplitude +#
+	LogFreq + MaxPitch + MeanPitch + POS + Nsyll + #
+	AccentPosition + AccentType + POS_class + Vowel + LastArgument + FocusParticle")#
+#
+## Define controls:#
+#
+p <- length(c(pred_cont,pred_cat))
+round(sqrt(14))
+sqrt(15)
+sqrt(17)
+library(ggplot2)
+p <- ggplot2(RPT,#
+	aes(x=AccentPosition,y=p_score,color=AccentType))#
+p + geom_bar()
+p <- ggplot(RPT,#
+	aes(x=AccentPosition,y=p_score,color=AccentType))#
+p + geom_bar()
+RPT$p_score
+p <- ggplot(RPT,#
+	aes(x=AccentPosition,y=p_score,color=AccentType),stat="identity")#
+p + geom_bar()
+p <- ggplot(RPT,#
+	aes(x=AccentPosition,y=p_score,color=AccentType))#
+p + geom_bar(stat="identity")
+p <- ggplot(RPT,#
+	aes(x=AccentPosition,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity")
+p <- ggplot(RPT,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+library(dplyr)
+head(RPT)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+?geom_bar
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType),stat="identity")#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType,stat="identity"))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType)#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+head(subs)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)
+subs
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+subs
+subs$AccentType
+subs$AccentType <- factor(as.character(subs$AccentType),#
+	levels=c("low","falling","high","rising"))
+subs
+subs$AccentType
+subs$AccentPosition <- factor(as.character(subs$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear-IP"))
+subs
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+subs$AccentType <- factor(as.character(subs$AccentType),#
+	levels=c("low","falling","high","rising"))#
+subs$AccentPosition <- factor(as.character(subs$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))
+subs
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity") + facet_wrap(~AccentPosition)
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=0.8) + facet_wrap(~AccentPosition)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=0.8) + facet_wrap(~AccentPosition)
+quartz("",9,5,mai=c(1.5,1.5,1,1))#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=0.8) + facet_wrap(~AccentPosition)
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition)
+library(RColorBrewer)
+brewer.pal.info
+display.brewer.all (RColorBrewer)
+display.brewer.all(RColorBrewer)
+display.brewer.all("RColorBrewer")
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette="heat.colors")
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette="terrain.colors")
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=1)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=2)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=3)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=4)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=5)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=6)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1) + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + theme_minimal()
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score")#
+	theme_minimal()
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score")#
+	theme_minimal(axis.text.y=element_text(face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.y=element_text(face="bold",size=20))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold",size=20))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	scale_x_categorical("Accent Type") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	scale_x_continuous("Accent Type") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	scale_y_continuous("Prominence Score") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"))
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+subs$AccentType <- factor(as.character(subs$AccentType),#
+	levels=c("low","falling","high","rising"))#
+subs$AccentPosition <- factor(as.character(subs$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="Accent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="Accent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"))
+levels(subs$AccentPosition)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+subs$AccentType <- factor(as.character(subs$AccentType),#
+	levels=c("low","falling","high","rising"))#
+subs$AccentPosition <- factor(as.character(subs$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+levels(subs$AccentPosition) = c("Prenuclear","Nuclear ip","Nuclear IP")#
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="Accent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="Accent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20)#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold"))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+summarySE(subs,measurevar="p_score",groupvars=c("AccentType","AccentPosition"))
+subs$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)[,2]
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD))
+subs
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+subs$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)[,3]
+subs
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+subs$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)[,4]
+subs
+aggregate(p_score ~ AccentPosition*AccentType,subs,sd)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+xagr <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+xagr$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)[,4]
+xagr
+aggregate(p_score ~ AccentPosition*AccentType,subs,sd)
+xagr$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)[,3]
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+xagr <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+xagr$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)$p_score#
+xagr$AccentType <- factor(as.character(xagr$AccentType),#
+	levels=c("low","falling","high","rising"))#
+v$AccentPosition <- factor(as.character(xagr$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+levels(xagr$AccentPosition) = c("Prenuclear","Nuclear ip","Nuclear IP")#
+quartz("",9,5)#
+p <- ggplot(xagr,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD))#
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+xagr <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+xagr$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)$p_score#
+xagr$AccentType <- factor(as.character(xagr$AccentType),#
+	levels=c("low","falling","high","rising"))#
+v$AccentPosition <- factor(as.character(xagr$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+levels(xagr$AccentPosition) = c("Prenuclear","Nuclear ip","Nuclear IP")#
+quartz("",9,5)#
+p <- ggplot(xagr,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+## Bodo Winter#
+## April 29, 2015; Major overhaul June 19, 2015#
+## Analysis of already computed mixed model data#
+#
+#########################################################################
+######################## Preliminaries#
+#########################################################################
+#
+## Load required packages:#
+#
+library(lme4)#
+library(ggplot2)#
+library(dplyr)#
+library(RColorBrewer)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in RPT summary data:#
+#
+RPT <- read.csv("RPT_summary_processed.csv")
+setwd("..")
+getwd()
+source("summarySE_function.R")
+summarySE()
+## Bodo Winter#
+## April 29, 2015; Major overhaul June 19, 2015#
+## Analysis of already computed mixed model data#
+#
+#########################################################################
+######################## Preliminaries#
+#########################################################################
+#
+## Load required packages:#
+#
+library(lme4)#
+library(ggplot2)#
+library(RColorBrewer)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in RPT summary data:#
+#
+RPT <- read.csv("RPT_summary_processed.csv")#
+#
+## Load in extra function:#
+#
+setwd("..")#
+source("summarySE_function.R")#
+#
+## Load in dplyr now:#
+#
+library(dplyr)
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+xagr <- aggregate(p_score ~ AccentPosition*AccentType,subs,mean)#
+xagr$SD <- aggregate(p_score ~ AccentPosition*AccentType,subs,sd)$p_score#
+xagr$AccentType <- factor(as.character(xagr$AccentType),#
+	levels=c("low","falling","high","rising"))#
+v$AccentPosition <- factor(as.character(xagr$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+levels(xagr$AccentPosition) = c("Prenuclear","Nuclear ip","Nuclear IP")#
+quartz("",9,5)#
+p <- ggplot(xagr,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+summarySE(subs)
+summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","AccentType"))
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","AccentType"))
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","AccentType"))#
+subs$AccentType <- factor(as.character(subs$AccentType),#
+	levels=c("low","falling","high","rising"))#
+subs$AccentPosition <- factor(as.character(subs$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+levels(subs$AccentPosition) = c("Prenuclear","Nuclear ip","Nuclear IP")
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=c(1.5,1.5,1,1),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+?unit
+library(ggplot2)
+?unit
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+library(dplyr)
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		plot.margin=unit(c(1.5,1.5,1,1),"cm"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-SD,ymax=p_score+SD)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se)) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.4) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+head(RPT)
+RPT$PitchRangeST_abs
+head(RPT)
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS"))
+head(subs)
+arrange(subs,p_score)
+subs
+subs <- arrange(subs,p_score)
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS"))#
+subs <- arrange(subs,p_score)#
+subs$POS <- factor(as.character(subs$POS),#
+	levels=as.character(subs$POS))
+subs
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS"))#
+subs <- arrange(subs,p_score)
+subs
+subs$POS <- factor(as.character(subs$POS),#
+	levels=as.character(subs$POS))
+subs
+subs$POS
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+scale_fill_brewer(palette=7)
+?scale_fill_brewer
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill=rgb(254,178,76)) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill=rgb(254,178,76,1)) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill="goldenrod") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS","POS_class"))#
+subs <- arrange(subs,p_score)#
+subs$POS <- factor(as.character(subs$POS),#
+	levels=as.character(subs$POS))#
+#
+## The plot:#
+#
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+head(RPT)
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS","POS_class"))
+subs
+subs <- arrange(subs,p_score)
+subs
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,color=POS_class))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill=POS_class))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,color=POS_class))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs$POS_class
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill=POS))#
+p + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill=POS))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS","POS_class"))#
+subs <- arrange(subs,p_score)#
+subs$POS <- factor(as.character(subs$POS),#
+	levels=as.character(subs$POS))#
+#
+## The plot:#
+#
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill=POS))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill=POS))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,color="goldenrod3"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod3"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod2"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod4"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod3"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod2"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech")
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score)#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,color="goldenrod3"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod3"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score,fill="goldenrod"))#
+p + geom_bar(stat="identity",width=1,color="black") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=POS,y=p_score))#
+p + geom_bar(stat="identity",width=1,color="black",fill="goldenrod") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+ggplot(subs,#
+	aes(x=POS,y=p_score)) + geom_bar(stat="identity",width=1,color="black",fill="goldenrod") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+ggplot(subs,#
+	aes(x=POS,y=p_score)) + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+ggplot(subs,#
+	aes(x=POS,y=p_score,fill=POS_class)) + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+ggplot(subs,#
+	aes(x=POS,y=p_score),fill=POS_class) + geom_bar(stat="identity",width=1,color="black",fill=POS_class) + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+quartz("",9,5)#
+ggplot(subs,#
+	aes(x=POS,y=p_score)) + geom_bar(stat="identity",width=1,color="black",fill="goldenrod3") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+RPT[RPT$POS == "VM",]
+## Bodo Winter#
+## April 29, 2015; Major overhaul June 19, 2015#
+## Analysis of already computed mixed model data#
+#
+#########################################################################
+######################## Preliminaries#
+#########################################################################
+#
+## Load required packages:#
+#
+library(lme4)#
+library(ggplot2)#
+library(RColorBrewer)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in RPT summary data:#
+#
+RPT <- read.csv("RPT_summary_processed.csv")#
+#
+## Load in extra function:#
+#
+setwd("..")#
+source("summarySE_function.R")#
+#
+## Load in dplyr now:#
+#
+library(dplyr)
+RPT$AccentType
+RPT$AccentPosition
+with(RPT, table(AccentPosition,Focused))
+with(RPT, table(AccentType,Focused))
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))
+head(subs)
+subs$AccentPosition
+subs$AccentPosition <- as.character(subs$AccentPosition)
+grep("ip|IP",subs$AccentPosition)
+subs$AccentPosition[grep("ip|IP",subs$AccentPosition)]
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs$AccentPosition <- as.character(subs$AccentPosition)#
+subs$AccentPosition[grep("ip|IP",subs$AccentPosition)] <- "nuclear"
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","Focused"))
+subs
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs$AccentPosition <- as.character(subs$AccentPosition)#
+subs$AccentPosition[grep("ip|IP",subs$AccentPosition)] <- "nuclear"#
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","Focused"))
+subs
+with(RPT, table(AccentPosition,Focused))
+subs <- filter(RPT,AccentPosition %in% c("postnuclear","nuclear_ip","nuclear_IP"))#
+subs$AccentPosition <- as.character(subs$AccentPosition)#
+subs$AccentPosition[grep("ip|IP",subs$AccentPosition)] <- "nuclear"#
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","Focused"))
+subs
+subs$AccentPosition
+subs$Focused
+## Bodo Winter#
+## March 12, 2015; Major overhaul June 19, 2015#
+## Preprocessing script#
+#
+#########################################################################
+######################## Load in data:#
+#########################################################################
+#
+## Load in libraries:#
+#
+library(dplyr)#
+library(reshape2)#
+library(xlsx)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in individual data (wide format):#
+#
+wide <- read.xlsx("rpt_Einzelwerte-25juli2014-1.xls",#
+	sheetIndex=2,stringsAsFactors=F)#
+#
+## Load in summary data:#
+#
+RPT <- read.xlsx("rpt-Daten-15juli2015.xls",#
+	sheetIndex=1,#
+	stringsAsFactors=F)#
+#
+## Set working directory to additional information folder and load everything in:#
+#
+setwd(file.path(mainDir,"additional_information"))#
+blocks <- read.csv("block_order_information.csv")#
+listener_gender <- read.csv("listener_gender_info.csv")#
+speaker_gender <- read.csv("speaker_gender_info.csv")#
+#########################################################################
+######################## Cleaning of "RPT":#
+#########################################################################
+#
+## Delete last row (is just empty):#
+#
+RPT <- RPT[-nrow(RPT),]#
+#
+## Make column names English:#
+#
+RPT <- rename(RPT,#
+	Word=Wort,#
+	NSyll=lex..Wortlänge,#
+	NSyllRealized=reale.Wortlänge,#
+	Sentence=Satz,#
+	Speaker=Sprecher,#
+	AccentPosition=Akzentposition,#
+	AccentType=Akzenttyp,#
+	MeanPitch=mean.pitch,#
+	MaxPitch=max.pitch,#
+	PitchRangeST=range.in.st,#
+	PitchSlopeST=slope.st.s,#
+	POS_class=POS_Klasse,#
+	SyllableDur=Dauer_Silbe,#
+	VowelDur=Dauer_Vokal,#
+	Vowel=Vokal,#
+	RMS_amplitude=RMS,#
+	Freq=Worthäufigkeit,#
+	LastArgument=letztesArgument,#
+	Focused=Fokuspartikel)#
+#
+## Put in more descriptive labels for "LastArgument" and "FocusParticle" column:#
+#
+RPT$LastArgument = as.factor(ifelse(RPT$LastArgument,"last","not_last"))#
+RPT$Focused = as.factor(ifelse(RPT$Focused,"focus_particle","no_focus_particle"))#
+#
+## Get rid of "--undefined--" tags:#
+#
+RPT[RPT$MeanPitch=="--undefined--",]$MeanPitch <- NA#
+RPT[RPT$MaxPitch=="--undefined--",]$MaxPitch <- NA#
+#
+## Add speaker gender info:#
+#
+speaker_gender$gender <- toupper(speaker_gender$gender)#
+RPT$SpeakerGender <- speaker_gender[match(RPT$Speaker,speaker_gender$speaker),]$gender#
+#
+## Log-transform frequency data:#
+#
+RPT$LogFreq <- log10(as.numeric(RPT$Freq)+1)#
+#########################################################################
+######################## Cleaning of "wide":#
+#########################################################################
+#
+## The first row just contains the block order information, delete this:#
+#
+wide <- wide[-1,]#
+#
+## The last column is just NA's:#
+#
+wide <- wide[,-ncol(wide)]#
+#
+## Make column names English:#
+#
+wide <- rename(wide,#
+	Sentence=Satz,#
+	Word=Wort)#
+#########################################################################
+######################## Create unique sentence identifiers:#
+#########################################################################
+#
+## Create a conglomerate block/sentence ID variable ... #
+## ... we will loop through that variable and check whether there ...#
+## ... is any sentence that has the same words (spoken by a different speaker):#
+#
+RPT$BlockSent <- paste(RPT$Block,RPT$Sentence,sep=":")#
+#
+## Create a set of sentence identifiers to assign to unique sentences later in the loop:#
+#
+NewSentenceID <- paste0(rep(LETTERS,3),1:(26*3))#
+#
+## Create an empty sentence ID column:#
+#
+RPT$NewSentenceID <- rep(NA,nrow(RPT))#
+#
+## Cycle through each sentence and see whether that sentence is a repeat:#
+#
+for(i in 1:length(unique(RPT$BlockSent))){#
+	## Pick the block sentence variable:#
+	thisBlockSent <- unique(RPT$BlockSent)[i]#
+#
+	## Pick all words in this sentence:#
+#
+	unlist(filter(RPT,BlockSent==thisBlockSent) %>% select(Word)) -> thisWordBag#
+	## Pick all sentences that ar not the current sentence:#
+	allOtherBlockSent <- unique(RPT$BlockSent)[-i]#
+#
+	## If it's filled with NAs, that means that the sentence has not been assigned yet:#
+	## Make that a Boolean variable, only those that are full of NA's have be dealt with:#
+#
+	NAcondition <- all(is.na(RPT[RPT$BlockSent == thisBlockSent,]$NewSentenceID))#
+	if(NAcondition){#
+		## Pick the next sentence identifier from the list of identifiers:#
+		RPT[RPT$BlockSent == thisBlockSent,]$NewSentenceID <- NewSentenceID[i]#
+#
+		## Check all other sentences whether there's any exact match.#
+		## If yes, they get the same identifier:#
+#
+		for(j in 1:length(allOtherBlockSent)){#
+			thisComparisonBlockSent <- allOtherBlockSent[j]#
+			thisComparisonWordBag <- RPT[RPT$BlockSent == thisComparisonBlockSent,]$Word#
+			if(all(thisWordBag %in% thisComparisonWordBag)){#
+				RPT[RPT$BlockSent == thisComparisonBlockSent,]$NewSentenceID <- NewSentenceID[i]#
+			}#
+		}#
+	}#
+}#
+#
+## How many did each sentence occur in the experiment?#
+#
+apply(table(RPT$NewSentenceID,RPT$Speaker),1,FUN=function(x){sum(x!=0)})#
+#########################################################################
+######################## Make "wide" into long format and append info:#
+#########################################################################
+#
+## Melt wide file into long format:#
+#
+long <- melt(wide,id.vars=c("Word","Sentence","Block"))#
+#
+## Rename:#
+#
+long <- rename(long,#
+	Listener=variable,#
+	Prominence=value)#
+#
+## Clean listener gender information:#
+#
+listener_gender$Names <- colnames(wide)[-c(1:3)]		# they appear in order of columns#
+listener_gender$gender <- toupper(listener_gender$gender)#
+#
+## Add listener gender information to long data frame:#
+#
+long$ListenerGender <- listener_gender[match(long$Listener,listener_gender$Names),]$gender#
+#
+## Create a pasted Block/Sentence/Word variable for merging with the RPT information:#
+#
+long$MatcherID <- paste(paste(long$Block,RPT$Sentence,sep=":"),long$Word,sep=":")#
+RPT$MatcherID <- paste(paste(RPT$Block,RPT$Sentence,sep=":"),RPT$Word,sep=":")#
+#
+## Merge:#
+#
+not_these_columns <- c("Block","Word","Sentence","MatcherID")#
+not_these_columns <- colnames(RPT) %in% not_these_columns#
+long <- cbind(long,RPT[match(long$MatcherID,RPT$MatcherID),!not_these_columns])#
+#
+## Get rid of the MatcherID column that was in the long file:#
+#
+long <- select(long,-MatcherID)#
+#
+## "Zu" occurs twice in Sentence 5, Block 3...#
+## ... but the "match" function only takes the first pick...#
+## ... so we need to override that:#
+#
+this_zu <- which(RPT$Word=="zu")[3]#
+long_zus <- which(long$Word=="zu")#
+long_zus <- long_zus[seq(along=long_zus)%%3==0]#
+long[long_zus,7:ncol(long)] <- RPT[this_zu,!not_these_columns]#
+#########################################################################
+######################## Re-ordering all columns:#
+#########################################################################
+#
+RPT <- select(RPT,#
+	Block,Speaker,SpeakerGender,Sentence,NewSentenceID,Word,#
+	POS,POS_class,NSyll,NSyllRealized,Vowel,Freq,LogFreq,#
+	AccentPosition,AccentType,#
+	LastArgument,Focused,	#
+	MeanPitch,MaxPitch,PitchRangeST,PitchSlopeST,#
+	RMS_amplitude,#
+	SyllableDur,VowelDur,p_score)#
+#
+long <- select(long,#
+	Listener,ListenerGender,#
+	Block,Speaker,SpeakerGender,Sentence,NewSentenceID,Word,#
+	POS,POS_class,NSyll,NSyllRealized,Vowel,Freq,LogFreq,#
+	AccentPosition,AccentType,#
+	LastArgument,Focused,	#
+	MeanPitch,MaxPitch,PitchRangeST,PitchSlopeST,#
+	RMS_amplitude,#
+	SyllableDur,VowelDur,Prominence)#
+#########################################################################
+######################## Write data:#
+#########################################################################
+#
+setwd(mainDir)#
+write.table(RPT,"RPT_summary_processed.csv",sep=",",row.names=F)#
+write.table(long,"RPT_individual_processed.csv",sep=",",row.names=F)
+## Bodo Winter#
+## March 12, 2015; Major overhaul June 19, 2015#
+## Preprocessing script#
+#
+#########################################################################
+######################## Load in data:#
+#########################################################################
+#
+## Load in libraries:#
+#
+library(dplyr)#
+library(reshape2)#
+library(xlsx)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in individual data (wide format):#
+#
+wide <- read.xlsx("rpt_Einzelwerte-25juli2014-1.xls",#
+	sheetIndex=2,stringsAsFactors=F)#
+#
+## Load in summary data:#
+#
+RPT <- read.xlsx("rpt-Daten-15juli2015.xls",#
+	sheetIndex=1,#
+	stringsAsFactors=F)#
+#
+## Set working directory to additional information folder and load everything in:#
+#
+setwd(file.path(mainDir,"additional_information"))#
+blocks <- read.csv("block_order_information.csv")#
+listener_gender <- read.csv("listener_gender_info.csv")#
+speaker_gender <- read.csv("speaker_gender_info.csv")
+RPT <- RPT[-nrow(RPT),]
+head(RPT)
+RPT <- rename(RPT,#
+	Word=Wort,#
+	NSyll=lex..Wortlänge,#
+	NSyllRealized=reale.Wortlänge,#
+	Sentence=Satz,#
+	Speaker=Sprecher,#
+	AccentPosition=Akzentposition,#
+	AccentType=Akzenttyp,#
+	MeanPitch=mean.pitch,#
+	MaxPitch=max.pitch,#
+	PitchRangeST=range.in.st,#
+	PitchSlopeST=slope.st.s,#
+	POS_class=POS_Klasse,#
+	SyllableDur=Dauer_Silbe,#
+	VowelDur=Dauer_Vokal,#
+	Vowel=Vokal,#
+	RMS_amplitude=RMS,#
+	Freq=Worthäufigkeit,#
+	LastArgument=letztesArgument,#
+	Focused=Fokuspartikel)
+head(RPT)
+rename(RPT,#
+	Word=Wort,#
+	NSyll=lex..Wortlänge)
+head(RPT)
+rename(RPT,#
+	Word=Wort)
+library(reshape2)#
+library(dplyr)
+RPT <- rename(RPT,#
+	Word=Wort,#
+	NSyll=lex..Wortlänge,#
+	NSyllRealized=reale.Wortlänge,#
+	Sentence=Satz,#
+	Speaker=Sprecher,#
+	AccentPosition=Akzentposition,#
+	AccentType=Akzenttyp,#
+	MeanPitch=mean.pitch,#
+	MaxPitch=max.pitch,#
+	PitchRangeST=range.in.st,#
+	PitchSlopeST=slope.st.s,#
+	POS_class=POS_Klasse,#
+	SyllableDur=Dauer_Silbe,#
+	VowelDur=Dauer_Vokal,#
+	Vowel=Vokal,#
+	RMS_amplitude=RMS,#
+	Freq=Worthäufigkeit,#
+	LastArgument=letztesArgument,#
+	Focused=Fokuspartikel)
+search()
+detach("package:reshape2",unload=TRUE)
+detach("package:plyr",unload=TRUE)
+detach("package:dplyr",unload=TRUE)
+detach("package:ggplot2",unload=TRUE)
+detach("package:plyr",unload=TRUE)
+search()
+library(reshape2)
+library(dplyr)
+RPT <- rename(RPT,#
+	Word=Wort,#
+	NSyll=lex..Wortlänge,#
+	NSyllRealized=reale.Wortlänge,#
+	Sentence=Satz,#
+	Speaker=Sprecher,#
+	AccentPosition=Akzentposition,#
+	AccentType=Akzenttyp,#
+	MeanPitch=mean.pitch,#
+	MaxPitch=max.pitch,#
+	PitchRangeST=range.in.st,#
+	PitchSlopeST=slope.st.s,#
+	POS_class=POS_Klasse,#
+	SyllableDur=Dauer_Silbe,#
+	VowelDur=Dauer_Vokal,#
+	Vowel=Vokal,#
+	RMS_amplitude=RMS,#
+	Freq=Worthäufigkeit,#
+	LastArgument=letztesArgument,#
+	Focused=Fokuspartikel)
+RPT$LastArgument = as.factor(ifelse(RPT$LastArgument,"last","not_last"))#
+RPT$Focused = as.factor(ifelse(RPT$Focused,"focus_particle","no_focus_particle"))
+RPT[RPT$MeanPitch=="--undefined--",]$MeanPitch <- NA#
+RPT[RPT$MaxPitch=="--undefined--",]$MaxPitch <- NA#
+#
+## Add speaker gender info:#
+#
+speaker_gender$gender <- toupper(speaker_gender$gender)#
+RPT$SpeakerGender <- speaker_gender[match(RPT$Speaker,speaker_gender$speaker),]$gender#
+#
+## Log-transform frequency data:#
+#
+RPT$LogFreq <- log10(as.numeric(RPT$Freq)+1)
+## The first row just contains the block order information, delete this:#
+#
+wide <- wide[-1,]#
+#
+## The last column is just NA's:#
+#
+wide <- wide[,-ncol(wide)]#
+#
+## Make column names English:#
+#
+wide <- rename(wide,#
+	Sentence=Satz,#
+	Word=Wort)
+#########################################################################
+######################## Create unique sentence identifiers:#
+#########################################################################
+#
+## Create a conglomerate block/sentence ID variable ... #
+## ... we will loop through that variable and check whether there ...#
+## ... is any sentence that has the same words (spoken by a different speaker):#
+#
+RPT$BlockSent <- paste(RPT$Block,RPT$Sentence,sep=":")#
+#
+## Create a set of sentence identifiers to assign to unique sentences later in the loop:#
+#
+NewSentenceID <- paste0(rep(LETTERS,3),1:(26*3))#
+#
+## Create an empty sentence ID column:#
+#
+RPT$NewSentenceID <- rep(NA,nrow(RPT))#
+#
+## Cycle through each sentence and see whether that sentence is a repeat:
+for(i in 1:length(unique(RPT$BlockSent))){#
+	## Pick the block sentence variable:#
+	thisBlockSent <- unique(RPT$BlockSent)[i]#
+#
+	## Pick all words in this sentence:#
+#
+	unlist(filter(RPT,BlockSent==thisBlockSent) %>% select(Word)) -> thisWordBag#
+	## Pick all sentences that ar not the current sentence:#
+	allOtherBlockSent <- unique(RPT$BlockSent)[-i]#
+#
+	## If it's filled with NAs, that means that the sentence has not been assigned yet:#
+	## Make that a Boolean variable, only those that are full of NA's have be dealt with:#
+#
+	NAcondition <- all(is.na(RPT[RPT$BlockSent == thisBlockSent,]$NewSentenceID))#
+	if(NAcondition){#
+		## Pick the next sentence identifier from the list of identifiers:#
+		RPT[RPT$BlockSent == thisBlockSent,]$NewSentenceID <- NewSentenceID[i]#
+#
+		## Check all other sentences whether there's any exact match.#
+		## If yes, they get the same identifier:#
+#
+		for(j in 1:length(allOtherBlockSent)){#
+			thisComparisonBlockSent <- allOtherBlockSent[j]#
+			thisComparisonWordBag <- RPT[RPT$BlockSent == thisComparisonBlockSent,]$Word#
+			if(all(thisWordBag %in% thisComparisonWordBag)){#
+				RPT[RPT$BlockSent == thisComparisonBlockSent,]$NewSentenceID <- NewSentenceID[i]#
+			}#
+		}#
+	}#
+}
+apply(table(RPT$NewSentenceID,RPT$Speaker),1,FUN=function(x){sum(x!=0)})
+## Melt wide file into long format:#
+#
+long <- melt(wide,id.vars=c("Word","Sentence","Block"))#
+#
+## Rename:#
+#
+long <- rename(long,#
+	Listener=variable,#
+	Prominence=value)#
+#
+## Clean listener gender information:#
+#
+listener_gender$Names <- colnames(wide)[-c(1:3)]		# they appear in order of columns#
+listener_gender$gender <- toupper(listener_gender$gender)#
+#
+## Add listener gender information to long data frame:#
+#
+long$ListenerGender <- listener_gender[match(long$Listener,listener_gender$Names),]$gender#
+#
+## Create a pasted Block/Sentence/Word variable for merging with the RPT information:#
+#
+long$MatcherID <- paste(paste(long$Block,RPT$Sentence,sep=":"),long$Word,sep=":")#
+RPT$MatcherID <- paste(paste(RPT$Block,RPT$Sentence,sep=":"),RPT$Word,sep=":")#
+#
+## Merge:#
+#
+not_these_columns <- c("Block","Word","Sentence","MatcherID")#
+not_these_columns <- colnames(RPT) %in% not_these_columns#
+long <- cbind(long,RPT[match(long$MatcherID,RPT$MatcherID),!not_these_columns])#
+#
+## Get rid of the MatcherID column that was in the long file:#
+#
+long <- select(long,-MatcherID)#
+#
+## "Zu" occurs twice in Sentence 5, Block 3...#
+## ... but the "match" function only takes the first pick...#
+## ... so we need to override that:#
+#
+this_zu <- which(RPT$Word=="zu")[3]#
+long_zus <- which(long$Word=="zu")#
+long_zus <- long_zus[seq(along=long_zus)%%3==0]#
+long[long_zus,7:ncol(long)] <- RPT[this_zu,!not_these_columns]
+RPT <- select(RPT,#
+	Block,Speaker,SpeakerGender,Sentence,NewSentenceID,Word,#
+	POS,POS_class,NSyll,NSyllRealized,Vowel,Freq,LogFreq,#
+	AccentPosition,AccentType,#
+	LastArgument,Focused,	#
+	MeanPitch,MaxPitch,PitchRangeST,PitchSlopeST,#
+	RMS_amplitude,#
+	SyllableDur,VowelDur,p_score)#
+#
+long <- select(long,#
+	Listener,ListenerGender,#
+	Block,Speaker,SpeakerGender,Sentence,NewSentenceID,Word,#
+	POS,POS_class,NSyll,NSyllRealized,Vowel,Freq,LogFreq,#
+	AccentPosition,AccentType,#
+	LastArgument,Focused,	#
+	MeanPitch,MaxPitch,PitchRangeST,PitchSlopeST,#
+	RMS_amplitude,#
+	SyllableDur,VowelDur,Prominence)
+setwd(mainDir)#
+write.table(RPT,"RPT_summary_processed.csv",sep=",",row.names=F)#
+write.table(long,"RPT_individual_processed.csv",sep=",",row.names=F)
+## Bodo Winter#
+## April 29, 2015; Major overhaul June 19, 2015#
+## Analysis of already computed mixed model data#
+#
+#########################################################################
+######################## Preliminaries#
+#########################################################################
+#
+## Load required packages:#
+#
+library(lme4)#
+library(ggplot2)#
+library(RColorBrewer)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in RPT summary data:#
+#
+RPT <- read.csv("RPT_summary_processed.csv")#
+#
+## Load in extra function:#
+#
+setwd("..")#
+source("summarySE_function.R")
+subs <- filter(RPT,AccentPosition %in% c("prenuclear","nuclear_ip","nuclear_IP"))#
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","AccentType"))#
+subs$AccentType <- factor(as.character(subs$AccentType),#
+	levels=c("low","falling","high","rising"))#
+subs$AccentPosition <- factor(as.character(subs$AccentPosition),#
+	levels=c("prenuclear","nuclear_ip","nuclear_IP"))#
+levels(subs$AccentPosition) = c("Prenuclear","Nuclear ip","Nuclear IP")#
+#
+## The plot:#
+#
+quartz("",9,5)#
+p <- ggplot(subs,#
+	aes(x=AccentType,y=p_score,fill=AccentType))#
+p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +#
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	scale_fill_brewer(palette=7) + coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nAccent Position") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs <- summarySE(RPT,measurevar="p_score",groupvars=c("POS","POS_class"))#
+subs <- arrange(subs,p_score)#
+subs$POS <- factor(as.character(subs$POS),#
+	levels=as.character(subs$POS))#
+#
+## The plot:#
+#
+quartz("",9,5)#
+ggplot(subs,#
+	aes(x=POS,y=p_score)) + geom_bar(stat="identity",width=1,color="black",fill="goldenrod3") + #
+	geom_errorbar(aes(ymin=p_score-se,ymax=p_score+se),width=0.2) + #
+	coord_cartesian(ylim=c(0,100)) + #
+	labs(y="Prominence Score",x="\nPart of Speech") + #
+	theme_minimal() + theme(axis.text.y=element_text(face="bold"),#
+		axis.title.y=element_text(face="bold",size=20),#
+		axis.title.x=element_text(face="bold",size=20),#
+		axis.text.x=element_text(face="bold"),#
+		axis.title.x=element_text(face="bold"),#
+		strip.text.x = element_text(size=20,face="bold",vjust=2))
+subs <- filter(RPT,AccentPosition %in% c("postnuclear","nuclear_ip","nuclear_IP"))#
+subs$AccentPosition <- as.character(subs$AccentPosition)#
+subs$AccentPosition[grep("ip|IP",subs$AccentPosition)] <- "nuclear"#
+subs <- summarySE(subs,measurevar="p_score",groupvars=c("AccentPosition","Focused"))
+subs
+RPT$Focused
+## Bodo Winter#
+## March 12, 2015; Major overhaul June 19, 2015#
+## Preprocessing script#
+#
+#########################################################################
+######################## Load in data:#
+#########################################################################
+#
+## Load in libraries:#
+#
+library(reshape2)#
+library(dplyr)#
+library(xlsx)#
+#
+## Path for main analysis:#
+#
+mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
+setwd(mainDir)#
+#
+## Load in individual data (wide format):#
+#
+wide <- read.xlsx("rpt_Einzelwerte-25juli2014-1.xls",#
+	sheetIndex=2,stringsAsFactors=F)#
+#
+## Load in summary data:#
+#
+RPT <- read.xlsx("rpt-Daten-15juli2015.xls",#
+	sheetIndex=1,#
+	stringsAsFactors=F)#
+#
+## Set working directory to additional information folder and load everything in:#
+#
+setwd(file.path(mainDir,"additional_information"))#
+blocks <- read.csv("block_order_information.csv")#
+listener_gender <- read.csv("listener_gender_info.csv")#
+speaker_gender <- read.csv("speaker_gender_info.csv")#
+#########################################################################
+######################## Cleaning of "RPT":#
+#########################################################################
+#
+## Delete last row (is just empty):#
+#
+RPT <- RPT[-nrow(RPT),]#
+#
+## Make column names English:#
+#
+RPT <- rename(RPT,#
+	Word=Wort,#
+	NSyll=lex..Wortlänge,#
+	NSyllRealized=reale.Wortlänge,#
+	Sentence=Satz,#
+	Speaker=Sprecher,#
+	AccentPosition=Akzentposition,#
+	AccentType=Akzenttyp,#
+	MeanPitch=mean.pitch,#
+	MaxPitch=max.pitch,#
+	PitchRangeST=range.in.st,#
+	PitchSlopeST=slope.st.s,#
+	POS_class=POS_Klasse,#
+	SyllableDur=Dauer_Silbe,#
+	VowelDur=Dauer_Vokal,#
+	Vowel=Vokal,#
+	RMS_amplitude=RMS,#
+	Freq=Worthäufigkeit,#
+	LastArgument=letztesArgument,#
+	Focused=Fokuspartikel)

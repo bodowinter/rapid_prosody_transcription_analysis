@@ -89,42 +89,58 @@ data.controls <- cforest_unbiased(ntree=3000,
 	mtry=round(sqrt(14)))	## 3,000 trees with 4 variables each (k = 14 parameters)
 	## this is the same for the accented analysis with k = 16 parameters
 
-## Run the forests:
+## Run the forests, first, the raw one:
 
 set.seed(42)
 forest_raw <- cforest(the_uber_formula,RPT,controls=data.controls)
+raw_predictions <- predict(forest_raw)
+raw_varimp <- varimp(forest_raw,conditional=FALSE)		# conditional = F coz of missing values
+save(forest_raw,raw_predictions,raw_varimp,file="raw_forests.RData")
+
+## Now remove the old baggage for memory space:
+
+rm(forest_raw,raw_predictions,raw_varimp)
+
+## Run the forest on central imputed data:
+
 set.seed(42)
 forest_central <- cforest(the_uber_formula,RPT_central,controls=data.controls)
+central_predictions <- predict(forest_central)
+central_varimp_conditional <- varimp(forest_central,conditional=TRUE)
+save(forest_central,central_predictions,central_varimp_conditional,file="central_forests.RData")
+
+## Remove old baggage to gain memory:
+
+rm(forest_central,central_predictions,central_varimp_conditional)
+
+## Run the forest on KNN imputed data:
+
 set.seed(42)
 forest_KNN <- cforest(the_uber_formula,RPT_KNN,controls=data.controls)
+KNN_predictions <- predict(forest_KNN)
+KNN_varimp_conditional <- varimp(forest_KNN,conditional=TRUE)
+save(forest_KNN,KNN_predictions,KNN_varimp_conditional,file="KNN_forests.RData")
+
+## Remove old baggage to gain memory:
+
+rm(forest_KNN,KNN_predictions,KNN_varimp_conditional)
+
+## The forest on the reduced dataset (missing values excluded):
+
 set.seed(42)
 forest_red <- cforest(the_uber_formula,RPT_red,controls=data.controls)
+red_predictions <- predict(forest_red)
+red_varimp_conditional <- varimp(forest_red,conditional=TRUE)
+save(forest_red,red_predictions,red_varimp_conditional,file="reduced_forests.RData")
+
+## Remove old baggage to gain memory:
+
+rm(forest_red,red_predictions,red_varimp_conditional)
+
+## Finally, the random forests on the subset for which we have slope and range values:
+
 set.seed(42)
 forest_accented <- cforest(accented_formula,RPT_accented,controls=data.controls)
-
-## Create predictions:
-
-raw_predictions <- predict(forest_raw)
-central_predictions <- predict(forest_central)
-KNN_predictions <- predict(forest_KNN)
-red_predictions <- predict(forest_red)
 accented_predictions <- predict(forest_accented)
-
-## Create variable importances, has to be conditional = FALSE for the raw data:
-
-set.seed(42)
-raw_varimp <- varimp(forest_raw,conditional=FALSE)
-set.seed(42)
-central_varimp_conditional <- varimp(forest_central,conditional=TRUE)
-set.seed(42)
-KNN_varimp_conditional <- varimp(forest_KNN,conditional=TRUE)
-set.seed(42)
-red_varimp_conditional <- varimp(forest_red,conditional=TRUE)
-set.seed(42)
-accnted_varimp_conditional <- varimp(forest_accented,conditional=TRUE)
-
-## Save all output:
-
-save.image("RPT_random_forests_output.RData")
-
-
+accented_varimp_conditional <- varimp(forest_accented,conditional=TRUE)
+save(forest_accented,accented_predictions,accented_varimp_conditional,file="accented_forests.RData")

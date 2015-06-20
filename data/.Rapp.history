@@ -1,305 +1,1504 @@
-pg2
-names(pg2)
-pg2$cookis
-pg2$cookies
-pg2$url
-pg2$times
-pg2$request
-con = content(pg2)
-head(con)
-str(con)
-pg1 = GET(handle=google,path="/")
-google = handle("http://google.com")#
-pg1 = GET(handle=google,path="/")
-pg2 = GET(handle=google,path="search")
-pg2
-library(httr)
-myapp = oauth_app("twitter",key="lwOCkjidg5k5N5piRFUS822dW",secret="lwOCkjidg5k5N5piRFUS822dW")
-myapp = oauth_app("twitter",#
-	key="lwOCkjidg5k5N5piRFUS822dW",#
-	secret="44qQKnxzO8pMpYgyeNcPNd6aUQZATFXkZUiHip3l3FPABRdBJU")
-sig = sign_oauth1.0(myapp,#
-	token="3239583325-6HSJZSLmKSNlxfHNBuwlypJuzjfRLrCP63w8sM0",#
-	token_secret="6th7sEKbmaHC2Tcj0h0wsc7F8e3B54gdk6ckYvU7AtzGm")
-homeTL = GET("https://api.twitter.com/1.1/statuses/home_timeline.json",sig)
-head(homeTL)
-json1 = content(homeTL)
-json2 = jsonlite::fromJSON(toJSON(json1))
-json2[1,1:4]
-source("http://bioconductor.org/biocLite.R")
-biocLite("rhdf5")
-h5write(c(12,13,14),"example.h5","foo/A",index=list(1:3,1))#
-h5read("example.h5","foo/A")
-install.packages("kernlab")
-library(kernlab)#
-data(spam)#
-set.seed(3435)#
-trainIndicator = rbinom(4601,size=1,prob=0.5)#
-tabl(trainIndicator)
-table(trainIndicator)
-trainSpam = spam[trainIndicator == 1,]#
-testSpam = spam[trainIndicator == 0,]
-names(trainSpam)
-head(trainSpam,2)
-table(trainSpam$type)
-plot(trainSpam$capitalAve ~ trainSpam$type)
-plot(log(trainSpam$capitalAve) ~ trainSpam$type)
-plot(log10(trainSpam$capitalAve+1) ~ trainSpam$type)
-plot(log10(trainSpam[,1:4]+1))
-hCluster = hclust(dist(t(trainSpam[,1:57])))
-plot(hCluster)
-hCluster = hclust(dist(t(log10(trainSpam[,1:55]+1))))
-plot(hCluster)
-trainSpam$numType = as.numeric(trainSpam$type)-1
-costFunction = function(x,y)sum(x != (y>0.5))
-cvError = rep(NA,55)
-library(boot)
-?cv.glm
-for(i in 1:55){#
-	lmFormula = reformulate(names(trainSpam)[i], response="numType")#
-	glmFit = glm(lmFormula,family="binomial",data=tranSpam)#
-	cvError[i] = cv.glm(trainSpam,glmFit,costFunction,2)$delta[2]#
-	}
-trainSpam$numType = as.numeric(trainSpam$type)-1#
-costFunction = function(x,y)sum(x != (y>0.5))#
-cvError = rep(NA,55)#
-library(boot)#
-for(i in 1:55){#
-	lmFormula = reformulate(names(trainSpam)[i], response="numType")#
-	glmFit = glm(lmFormula,family="binomial",data=traniSpam)#
-	cvError[i] = cv.glm(trainSpam,glmFit,costFunction,2)$delta[2]#
-	}
-trainSpam$numType = as.numeric(trainSpam$type)-1#
-costFunction = function(x,y)sum(x != (y>0.5))#
-cvError = rep(NA,55)#
-library(boot)#
-for(i in 1:55){#
-	lmFormula = reformulate(names(trainSpam)[i], response="numType")#
-	glmFit = glm(lmFormula,family="binomial",data=trainSpam)#
-	cvError[i] = cv.glm(trainSpam,glmFit,costFunction,2)$delta[2]#
-	}
-names(trainSpam)[which.min(cvError)]
-predictionModel = glm(NumType ~ charDollar,family="binomial",data=trainSpam)
-predictionModel
-predictionModel = glm(numType ~ charDollar,family="binomial",data=trainSpam)
-predictionModel
-summary(predictionModel)
-predictionTest = predict(predictionModel,testSpam)
-predictionTest
-predictedSpam = rep("nonspam",dim(testSpam)[1])
-predictedSpam
-dim(testSpam)[1]
-dim(testSpam)
-predictedSpam[predictionModel$fitted > 0.5] = "spam"
-predictedSpam
-table(predictedSpam,testSpam$type)
-diag(table(predictedSpam,testSpam$type))
-sum(diag(table(predictedSpam,testSpam$type)))
-sum(diag(table(predictedSpam,testSpam$type)))/sum(table(predictedSpam,testSpam$type))
-1-sum(diag(table(predictedSpam,testSpam$type)))/sum(table(predictedSpam,testSpam$type))
-reformulate("A","B")
-reformulate(c("A","C"),"B")
-x = c(3,2,5,1,4)
-sort(x)
-sort(x,decreasing=F)
-sort(x,decreasing=T)
-x = c(3,2,NA,5,NA,1,NA,4)
-sort(x,decreasing=T)
-sort(x,decreasing=F)
-sort(x,decreasing=F,na.last=T)
-order(x)
-x[order(x)]
-x[order(x,decreasing=T)]
-x[order(x,decreasing=T,na.last=F)]
-set.seed(13435)
-X <- data.frame("var1"=sample(1:5),"var2"=sample(6:10),"var3"=sample(11:15))
-set.seed(13435)#
-X <- data.frame("var1"=sample(1:5),"var2"=sample(6:10),"var3"=sample(11:15))#
-X <- X[sample(1:5),]; X$var2[c(1,3)] = NA
-X
-library(plyr)
-arrange(X,var1)
-arrange(X,desc(var1))
-arrange(X,desc(var2))
-arrange(X,desc(var3))
-getwd()
-220
-200/220
-(200/220)*640
-29+9
-872+652
-getwd()
-R.version.string
-install.packages("swirl")
-library(swirl)
-install_from_swirl("Getting and Cleaning Data")
-swirl()
-mydf <- read.csv("path2csv",stringsAsFactors=FALSE)
-list.files()
-mydf <- read.csv(path2csv,stringsAsFactors=FALSE)
-dim(mydf)
-head(mydf)
-library(dplyr)
-packageVersion("dplyr")
-head(mydf)
-play()
-head(mydf)
-class(mydf)
-str(mydf)
-nxt()
-cran <- tbl_df(mydf)
-rm("mydf")
-play()
-class(cran)
-head(tbl_df)
-str(tbl_df)
-nxt()
-?tbl_df
-tbl_df
-cran
-?select
-play()
-str(cran)
-head(cran)
-cran
-nxt()
-select(cran,ip_id,package,country)
-5:20
-select(cran,r_arch:country)
-select(cran,country:r_arch)
-cran
-select(cran,-time)
-select(cran,-5:20)
--5:20
--(5:20)
-select(cran,-(X:size))
-filter(cran,package=="swirl")
-filter(cran,r_version == "3.1.1",country=="US")
-?Comparison
-filter(cran,country=="IN",r_version<="3.0.2")
-filter(cran, country == "US" | country == "IN")
-filter(cran,size>100500,r_os="linux-gnu")
-filter(cran,size>100500,r_os=="linux-gnu")
-is.na(c(3,5,NA,10))
-!is.na(c(3,5,NA,10))
-filter(cran,!is.na(r_version))
-cran2 <- select(cran,size:ip_id)
-arrange(cran2,ip_id)
-arrange(cran2,desc(ip_id))
-arrange(cran2,package,ip_id)
-arrange(cran2,country,desc(r_version),ip_id)
-cran3 <- select(cran,ip_id,package,size)
-cran3
-mutate(cran3,size_mb = size / 2^20)
-mutate(cran3,size_mb = size / 2^20, size_gb = size_mb / 2^10)
-mutate(cran3,correct_size = size + 1000)
-summarize(cran,avg_bytes=mean(size))
-library(dplyr)
-cran <- tbl_df(mydf)
-rm("mydf")
-cran
-?group_by
-play()
-?group_by
-nxt()
-by_package <- group_by(cran,package)
-by_package
-summarize(by_package,mean(size))
-submit()
-?n
-submit()
-pack_sum <- summarize(by_package,#
-                      count = n(),#
-                      unique = n_distinct(ip_id),#
-                      countries = n_distinct(country),#
-                      avg_bytes = mean(size))
-head(pack_sum)
-submit()
-pack_sum
-quantile(pack_sum$count,probs=0.99)
-filter(pack_sum,count>679)
-top_counts <- filter(pack_sum,count>679)
-top_counts
-View(top_counts)
-arrange(top_counts,count)
-arrange(top_counts,count) -> top_counts_sorted
-arrange(top_counts,desc(count)) -> top_counts_sorted
-View(top_counts_sorted)
-quantile(pack_sum$unique,probs=0.99)
-filter(pack_sum,unique>465) -> top_unique
-View(top_unique)
-arrange(top_unique,desc(unique)) -> top_unique_sorted
-View(top_uniqu_sorted)
-View(top_unique_sorted)
-submit()
-View(result3)
-submit()
-library(tidyr)
-students
-?gathr
-?gather
-gather(students,sex,count,-grade)
-students2
-gather(students,sex_class,count,-grade)
-gather(students2,sex_class,count,-grade)
-gather(students2,sex_class,count,-grade) -> res
-res
-?separate
-separate(res,sex_class,c("sex","class"))
-submit()
-students3
-submit()
-?spread
-submit()
-play()
-students2
-nxt()
-submit()
-extract_numeric("class5")
-submit()
-students4
-submit()
-passed
-failed
-mutate(passed,status="passed") -> passed
-mutate(failed,status="failed") -> faild
-mutate(failed,status="failed") -> failed
-bind_rows(passed,failed)
-sat
-?select
-submit()
-## Load required packages:#
+## Bodo Winter#
+## April 22, 2014; changed on April 23, 2014 to analysis of full data#
+## July 4, 2014 adapted for new dataset#
+## Test-analysis of Tiny Number data#
 #
-library(lme4)#
-library(ggplot2)#
-library(RColorBrewer)#
+## Load in data:#
 #
-## Path for main analysis:#
+setwd("/Users/teeniematlock/Desktop/research/mathematical_cognition/tiny_numbers/new_web_experiment/data2/")#
+filenames = list.files()#
+xdata = c()#
+for(name in filenames){#
+	xdata = rbind(xdata,read.table(name,sep=";",header=F))#
+	}#
 #
-mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
-setwd(mainDir)#
+## Get rid off extra column:#
 #
-## Load in RPT summary data:#
+xdata = xdata[,-ncol(xdata)]#
 #
-RPT <- read.csv("RPT_summary_processed.csv")
+## Give names:#
+#
+colnames(xdata) = c("condition","response","video_viewed","body_awareness")#
+#
+## How many couldn't view the video?#
+#
+table(xdata$video_viewed)			# 4 couldn't#
+#
+## Exclude those that couldn't view the video:#
+#
+xdata = xdata[xdata$video_viewed == "yes",]#
+#
+## Check weird responses#
+#
+xdata$response = as.numeric(xdata$response)#
+#
+## Get rid of NA's:#
+#
+xdata = xdata[!is.na(xdata$response),]#
+#
+## Check proportions:#
+#
+table(xdata$condition)#
+#
+## Most frequent response:#
+#
+table(xdata$response)#
+#
+## Make a boxplot:#
+#
+boxplot(response ~ condition,xdata,ylim=c(0,30))#
+#
+## Center body awareness variable:#
+#
+xdata$body_awareness_c = xdata$body_awareness-mean(xdata$body_awareness)#
+xdata$body_awareness_z = scale(xdata$body_awareness)#
+#
+## Make a test (poisson regression makes sense here):#
+#
+xmdl = glm(response ~ condition*body_awareness_z,xdata,family="poisson")#
+summary(xmdl)#
+#
+## Check body awareness results:#
+#
+table(xdata$body_awareness)#
+mean(xdata$body_awareness)#
+sd(xdata$body_awareness)#
+#
+## Check estimates:#
+## with body awareness at mean:#
+exp(coef(xmdl)["(Intercept)"])			# open#
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"])		# pinch#
+## with body awareness +1SD:#
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+## with body awareness -1SD:#
+exp(coef(xmdl)["(Intercept)"]+(-1)*coef(xmdl)["body_awareness_z"])			# open#
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+(-1)*coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+#
+## Look at means:#
+#
+xagr = aggregate(response ~ condition,xdata,mean)#
+xagr#
+#
+## Make a barplot for behind the image:#
+#
+quartz("",8,6)#
+par(mai=c(2.1,1.1,0.8,0.8))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="steelblue",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="wheat3",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)
+exp(coef(xmdl)["(Intercept)"])			# open#
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"])		# pinch
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch
+xdata$body_awareness_z
+xdata$body_awareness_z-1
+xdata$body_awareness_pos = xdata$body_awareness_z-i#
+	xmdl = glm(response ~ condition*body_awareness_z,xdata,family="poisson")
+i=-1
+xdata$body_awareness_pos = xdata$body_awareness_z-i#
+	xmdl = glm(response ~ condition*body_awareness_z,xdata,family="poisson")
+summary(xmdl)
+i=0.5
+xdata$body_awareness_pos = xdata$body_awareness_z-i#
+	xmdl = glm(response ~ condition*body_awareness_z,xdata,family="poisson")
+summary(xmdl)
+xmdl
+summary(xmdl)
+sd(xdata$response)
+xdata$response
+xdata$body_awareness
+sd(xdata$body_awareness)
+mean(xdata$body_awareness)
+body_mean-body_sd
+body_mean = mean(xdata$body_awareness)#
+body_sd = sd(xdata$body_awareness)
+body_mean-body_sd
+body_mean+body_sd
+seq(body_mean-body_sd,body_mean+body_sd,length.out=10)
+body)mean
+body_mean
+seq(body_mean-body_sd,body_mean+body_sd,length.out=11)
+the_sequence-body_mean
+the_sequence = seq(body_mean-body_sd,body_mean+body_sd,length.out=11)		# from mean-1*SD to mean+1*SD
+the_sequence-body_mean
+the_sequence = the_sequence-body_mean
+xmdl = glm(response ~ condition*body_awareness,xdata,family="poisson")
+xdata$body_awareness_new = xdata$body_awareness+i#
+	xmdl = glm(response ~ condition*body_awareness_new,xdata,family="poisson")
+summary(xmdl)
+i=-2
+xdata$body_awareness_new = xdata$body_awareness+i#
+	xmdl = glm(response ~ condition*body_awareness_new,xdata,family="poisson")
+i=-1.5
+xdata$body_awareness_new = xdata$body_awareness+i#
+	xmdl = glm(response ~ condition*body_awareness_new,xdata,family="poisson")
+summary(xmdl)
+glm(response ~ condition*body_awareness_z,xdata)
+xda=glm(response ~ condition*body_awareness_z,xdata)
+xda=lm(response ~ condition*body_awareness_z,xdata)
+summary(xda)
+plot(fitted(xda),residuals(xda))
+aov(xda)
+anova(xda)
+xmdl = glm(response ~ condition*body_awareness_z,xdata,family="poisson")#
+summary(xmdl)
+quartz("",11,5)#
+par(mfrow=c(1,2);mai=c(2.1,1.1,0.8,0.8))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="steelblue",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="wheat3",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,pinch,col="steelblue",lwd=3)#
+text(3,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6,0,8,open,col="wheat3",lwd=3)#
+text(7,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mfrow=c(1,2),mai=c(2.1,1.1,0.8,0.8))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="steelblue",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="wheat3",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,pinch,col="steelblue",lwd=3)#
+text(3,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6,0,8,open,col="wheat3",lwd=3)#
+text(7,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mfrow=c(1,2),mai=c(1.1,1.1,0.8,0.8))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+mtext("People with average awareness",line=1.5,font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,pinch,col="steelblue",lwd=3)#
+text(3,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6,0,8,open,col="wheat3",lwd=3)#
+text(7,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mfrow=c(1,2),mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+mtext("People with average awareness",line=1.5,font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,10),ylim=c(0,15))#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,pinch,col="steelblue",lwd=3)#
+text(3,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6,0,8,open,col="wheat3",lwd=3)#
+text(7,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+mtext("People with average awareness",line=1.5,font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+rect(2+10,0,4+10,pinch,col="steelblue",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="wheat3",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+text(5,10,"People with average awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+rect(2+10,0,4+10,pinch,col="steelblue",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="wheat3",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+text(5,15,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+rect(2+10,0,4+10,pinch,col="steelblue",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="wheat3",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+rect(2+10,0,4+10,pinch,col="steelblue",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="wheat3",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="steelblue",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="wheat3",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="lightgrey",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="black",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+abline(lwd=2,v=10,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="lightgrey",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="black",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="lightgrey",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="black",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="lightgrey",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="black",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="lightgrey",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="black",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below
+quartz("",11,5)#
+par(mai=c(1.1,1.1,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below
+quartz("",11,5)#
+par(mai=c(1.25,1.25,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below
+?text
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(5,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(15,-1,xpd=NA,labels="open",cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+## big y-axis#
+mtext(side=2,"Estimated No. of people",font=2,cex=2)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+## big y-axis#
+mtext(side=2,"Estimated No. of people",font=2,cex=2,line=3)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+## big y-axis#
+mtext(side=2,"Estimated No. of people",font=2,cex=2,line=4)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+## big y-axis#
+mtext(side=2,"Estimated No.\nof people",font=2,cex=2,line=5)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+## big y-axis#
+mtext(side=2,"Estimated No.\nof people",font=2,cex=2,line=4.5)
+quartz("",11,5)#
+par(mai=c(0.8,0.8,0.8,0.8),omi=c(0,1,0,0))#
+plot(1,1,type="n",bty="n",xaxt="n",yaxt="n",xlab="",ylab="",xlim=c(0,20),ylim=c(0,15))#
+abline(lwd=3,h=0)#
+segments(x0=10,x1=10,y0=0,y1=15,lwd=2,lty=2)#
+text(5,14,"Participants with\naverage awareness",font=2,cex=1.5)#
+axis(2,seq(0,15,2.5),lwd.ticks=3,lwd=3,las=2,cex.axis=1.5)#
+rect(2,0,4,xagr[1,2],col="black",lwd=3)#
+text(3,xagr[1,2]+1,round(xagr[1,2],2),cex=1.5,font=2)#
+rect(6,0,8,xagr[2,2],col="lightgrey",lwd=3)#
+text(7,xagr[2,2]+1,round(xagr[2,2],2),cex=1.5,font=2)#
+## +1 awareness#
+pinch = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["conditionpinch"]+coef(xmdl)["conditionpinch:body_awareness_z"])		# pinch#
+open = exp(coef(xmdl)["(Intercept)"]+coef(xmdl)["body_awareness_z"])			# open#
+text(5+10,14,"Participants with\n+1SD awareness",font=2,cex=1.5)#
+rect(2+10,0,4+10,pinch,col="black",lwd=3)#
+text(3+10,pinch+1,round(pinch,2),cex=1.5,font=2)#
+rect(6+10,0,8+10,open,col="lightgrey",lwd=3)#
+text(7+10,open+1,round(open,2),cex=1.5,font=2)#
+## add text below#
+text(3,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(7,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+text(13,-1,xpd=NA,labels="pinch",cex=1.5,font=2)#
+text(17,-1,xpd=NA,labels="open",cex=1.5,font=2)#
+## big y-axis#
+mtext(side=2,"Estimated number\nof people",font=2,cex=2,line=4.5)
+## Bodo Winter#
+## July 18, 2013#
+## July 18, 2013#
+## Tiny Number Analysis#
+#
+setwd("/Users/teeniematlock/Desktop/research/mathematical_cognition/tiny_numbers/")#
+tiny = read.csv("tiny_number_processed_names_added.csv")#
+#
+nrow(tiny)			# 156#
+tiny = tiny[tiny$Comment != "literal",]#
+nrow(tiny)			# 151		# 5 were excluded because of literal use#
+#
+# same speakers?#
+#
+which(table(tiny[!is.na(tiny$GestureType),]$Speaker)>1)#
+#
+# exclude doublets#
+#
+tiny = subset(tiny, Speaker != "eric liu")#
+tiny = subset(tiny, Speaker != "joan cashin")#
+#
+# look at data#
+#
+table(tiny$WhichHand)#
+table(tiny$GestureType)#
+35/sum(table(tiny$GestureType))#
+4/sum(table(tiny$GestureType))#
+10/sum(table(tiny$GestureType))#
+# open versus pinch#
+#
+M = as.matrix(c(35,10))		#
+chisq.test(M)#
+#
+# going as much against ourselves as possible, combine open + small_movement as standing#
+# against the hypothesis:#
+#
+M2 = as.matrix(c(35,16))#
+chisq.test(M2)#
+## preparing dataset for reliability#
+#
+MP = read.csv("tiny_nubmers_to_code_reliability MP.csv")#
+rel.df = data.frame(BW.WhichHand=tiny[match(MP$Index,tiny$Index),]$WhichHand,#
+	BW.GestureType = tiny[match(MP$Index,tiny$Index),]$GestureType,Index=tiny[match(MP$Index,tiny$Index),]$Index)#
+rel.df$MP.WhichHand = MP$WhichHand#
+rel.df$MP.GestureType = MP$GestureType#
+rel.df = rel.df[,c(3,1,4,2,5)]#
+rel.df$BW.GestureType = as.character(rel.df$BW.GestureType)#
+rel.df[rel.df$BW.GestureType == "small_movement",]$BW.GestureType = "difficult_to_see"#
+rel.df$MP.GestureType = as.character(rel.df$MP.GestureType)
+rel.df
+library(irr)
+install.packages("irr")
+library(irr)#
+kappa2(ratings=rel.df[,4:5])
+sum(rel.df$MP.GestureType == rel.df$BW.GestureType)
+nrow(rel.df)
+## Bodo Winter#
+## January 25, 2015#
+## Tiny vs. Huge number quick analysis for CogSci and Rome abstracts#
+#
+## Libraries:#
+#
+library(xlsx)#
+#
+## Load in huge number:#
+#
+setwd("/Users/teeniematlock/Desktop/research/mathematical_cognition/tiny_numbers/huge_numbers_new_download/data/")#
+huge = read.xlsx("huge_number_subset_coded.xlsx",sheetName=1)#
+#
+## Load in tiny number:#
+#
+setwd("/Users/teeniematlock/Desktop/research/mathematical_cognition/tiny_numbers/")#
+tiny = read.csv("tiny_number_processed_names_added MP_type_of_two_finger_added.csv")
+table(huge$HandShape)#
+table(tiny$GestureType)#
+#
+## Conservatively, we may count the "two hand approach" as being "open" (the hands are not pinching) ...#
+## And we may count "closed" in "huge number" and "complex" (Jim Cramer) as pinches#
+#
+M = matrix(c(38,16,8,46),nrow=2,byrow=T)#
+rownames(M) = c("tiny","huge")#
+colnames(M) = c("closed","open")#
+M#
+prop.table(M,margin=1)#
+chisq.test(M)
+## Bodo Winter#
+## January 22, 2015#
+## Exploration of coded data#
+#
+## Load in packages:#
+#
+library(xlsx)#
+#
+## Load in data:#
+#
+setwd("/Users/teeniematlock/Desktop/research/mathematical_cognition/high_number_TVnews/data/")#
+high = read.xlsx("high_number_for_coding_subset200_coded.xlsx",sheetName=1)#
+low = read.xlsx("low_number_for_coding_subset200_coded.xlsx",sheetName=1)#
+high = rbind(high,read.xlsx("high_number_for_coding_subset300_new_coded.xlsx",sheetName=1))#
+low = rbind(low,read.xlsx("low_number_for_coding_subset300_new_coded.xlsx",sheetName=1))#
+#
+## Add Phrase column:#
+#
+high$WhichPhrase = "high_number"#
+low$WhichPhrase = "low_number"
+xdata = rbind(high,low)#
+#
+## Check:#
+#
+nrow(xdata)		# 1,000#
+#
+## Get rid of everything that's a duplicate:#
+#
+xdata = xdata[-grep("duplicate",as.character(xdata$Comment)),]#
+#
+## Get rid of everything that is deictic:#
+#
+xdata = xdata[-grep("deictic",xdata$Comment),]#
+nrow(xdata)		# 907#
+#
+## Make a table with "WhichHand":#
+#
+table(xdata$WhichPhrase,xdata$WhichHand)[,-c(3,5)]#
+chisq.test(table(xdata$WhichPhrase,xdata$WhichHand)[,-c(3,5)])
+chisq.test(table(xdata$WhichPhrase,xdata$PalmOrientation)[,c("down","up")])
+xdata$HorizontalMovement = NA#
+xdata[grep("move-right",xdata$Comment),]$HorizontalMovement = "right"#
+xdata[grep("move-left",xdata$Comment),]$HorizontalMovement = "left"#
+#
+table(xdata$WhichPhrase,xdata$HorizontalMovement)#
+chisq.test(table(xdata$WhichPhrase,xdata$HorizontalMovement))#
+#
+## Check vertical movement orietation:#
+#
+xdata$VerticalMovement = NA#
+xdata[grep("move-up",xdata$Comment),]$VerticalMovement = "up"#
+xdata[grep("move-down",xdata$Comment),]$VerticalMovement = "down"
+table(xdata$WhichPhrase,xdata$VerticalMovement)#
+chisq.test(table(xdata$WhichPhrase,xdata$VerticalMovement))
+xdata
+head(xdata)
+chisq.test(table(xdata$WhichPhrase,xdata$PalmOrientation)[,c("down","up")])
+xdata$VerticalMovement = NA#
+xdata[grep("move-up",xdata$Comment),]$VerticalMovement = "up"#
+xdata[grep("move-down",xdata$Comment),]$VerticalMovement = "down"#
+#
+table(xdata$WhichPhrase,xdata$VerticalMovement)#
+chisq.test(table(xdata$WhichPhrase,xdata$VerticalMovement))
+table(xdata$WhichPhrase,xdata$VerticalMovement)
+head(high)
+table(xdata$WhichPhrase,xdata$PalmOrientation)
+chisq.test(table(xdata$WhichPhrase,xdata$PalmOrientation)[,c("down","up")])
+table(xdata$WhichPhrase,xdata$PalmOrientation)[,c("down","up")]
+table(xdata$WhichPhrase,xdata$VerticalMovement)
+head(xdata)
+table(xdata$WhichPhrase,xdata$WhichHand)[,-c(3,5)]
+chisq.test(table(xdata$WhichPhrase,xdata$WhichHand)[,-c(3,5)])
+chisq.test(table(xdata$WhichPhrase,xdata$PalmOrientation)[,c("down","up")])
+chisq.test(table(xdata$WhichPhrase,xdata$VerticalMovement))
+table(huge$WhichHand)#
+table(tiny$WhichHand)#
+M.hand = matrix(c(26,10,17,20,19,24),nrow=2,byrow=T)
+M.hand
+table(huge$WhichHand)
+table(tiny$WhichHand)
+M.hand
+table(huge$WhichHand)
+8+46
+10+17+26
+table(tiny$WhichHand)
+19+24+1
+19+24+19
+35+10
+M.hand = matrix(c(26,10,17,20,19,24),nrow=2,byrow=T)#
+chisq.test(M.hand)
+M = matrix(c(38,16,8,46),nrow=2,byrow=T)#
+rownames(M) = c("tiny","huge")#
+colnames(M) = c("closed","open")#
+M#
+prop.table(M,margin=1)#
+chisq.test(M)
+## Bodo Winter#
+## June 1, 2015#
+## Graphs for phonetic methods paper#
+#
+setwd("/Users/teeniematlock/Desktop/research/phonetic_methods/")#
+#
+## Figure 1: Distributional overlap and unlucky sampling choice#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+y2 = dnorm(x,mean=270,sd=60)#
+y3 = dnorm(x,mean=110,sd=35)#
+y4 = dnorm(x,mean=350,sd=50)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(0,500),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)#
+points(x,y1,type="l",lwd=2,lty="dotted")#
+text(150,max(y1)+0.0015,labels="short\nvowels",font=2,cex=1.15)#
+points(x,y2,type="l",lwd=2)#
+text(270,max(y2)+0.0015,labels="long\nvowels",font=2,cex=1.15)#
+A = 180#
+points(A,dnorm(A,mean=270,sd=60),pch=19,cex=1.25)#
+text(A,dnorm(A,mean=270,sd=60)+0.0012,labels="A",font=2,cex=1.15)#
+B = 220#
+points(B,dnorm(B,mean=150,sd=40),pch=19,cex=1.25)#
+text(B,dnorm(B,mean=150,sd=40)+0.0012,labels="B",font=2,cex=1.15)
+## Bodo Winter#
+## June 1, 2015#
+## Graphs for phonetic methods paper#
+#
+setwd("/Users/teeniematlock/Desktop/research/phonetic_methods/")#
+#
+## Figure 1: Distributional overlap and unlucky sampling choice#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+y2 = dnorm(x,mean=270,sd=60)#
+y3 = dnorm(x,mean=110,sd=35)#
+y4 = dnorm(x,mean=350,sd=50)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(0,500),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)#
+points(x,y1,type="l",lwd=2,lty="dotted")#
+text(150,max(y1)+0.0015,labels="short\nvowels",font=2,cex=1.15)#
+points(x,y2,type="l",lwd=2)#
+text(270,max(y2)+0.0015,labels="long\nvowels",font=2,cex=1.15)#
+A = 180#
+points(A,dnorm(A,mean=270,sd=60),pch=19,cex=1.25)#
+text(A,dnorm(A,mean=270,sd=60)+0.0012,labels="A",font=2,cex=1.15)#
+B = 220#
+points(B,dnorm(B,mean=150,sd=40),pch=19,cex=1.25)#
+text(B,dnorm(B,mean=150,sd=40)+0.0012,labels="B",font=2,cex=1.15)#
+box(lwd=4)
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(0,500),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)#
+points(x,y1,type="l",lwd=2,lty="dotted")#
+text(150,max(y1)+0.0015,labels="short\nvowels",font=2,cex=1.15)#
+points(x,y2,type="l",lwd=2)#
+text(270,max(y2)+0.0015,labels="long\nvowels",font=2,cex=1.15)#
+A = 180#
+points(A,dnorm(A,mean=270,sd=60),pch=19,cex=1.25)#
+text(A,dnorm(A,mean=270,sd=60)+0.0012,labels="A",font=2,cex=1.15)#
+B = 220#
+points(B,dnorm(B,mean=150,sd=40),pch=19,cex=1.25)#
+text(B,dnorm(B,mean=150,sd=40)+0.0012,labels="B",font=2,cex=1.15)#
+box(lwd=4)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(0,500),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)#
+box(lwd=4)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(0,500),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)#
+box(lwd=4)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(0,500),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+text(20,0.015,labels="(A)",font=2,cex=1.25)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),mfrow=c(1,2),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",11,4);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=150,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.016),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+max(y1)
+y1 = dnorm(x,mean=0,sd=40)
+max(y1)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(0,500,1)#
+y1 = dnorm(x,mean=0,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l")
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-50,50),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-150,150),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-150,150),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-150,150),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+mtext(side=1,line=1.5,text="Vowel duration",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=40)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-150,150),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+mtext(side=1,line=1.5,text="VOT",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",8,6);par(mai=c(0.75,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,25),font=2,lwd=4)#
+mtext(side=1,line=1.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",8,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.01),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,25),font=2,lwd=4,cex.axis=2)#
+mtext(side=1,line=2.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+max(y1)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",8,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,25),font=2,lwd=4,cex.axis=2)#
+mtext(side=1,line=2.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,25),font=2,lwd=4,cex.axis=2)#
+mtext(side=1,line=2.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2)#
+mtext(side=1,line=2.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=2,at=seq(-100,100,50))#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))))#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+?polygon
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="goldenrod3")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="goldenrod3")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)#
+mtext(side=2,line=1.5,text="Proportion of words",font=2,cex=1.7)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="goldenrod3")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="goldenrod2")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="wheat2")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="VOT",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="wheat2")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.5,text="Voice Onset Time",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="wheat2")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=3.8,text="Voice Onset Time",font=2,cex=2)
+## Bodo Winter#
+## June 1, 2015; Adapted for ICPhS June 19, 2015#
+## Graphs for phonetic methods paper#
+#
+## Figure 1: Normal distribution centered at 0#
+#
+n=50#
+x = seq(-200,200)#
+y1 = dnorm(x,mean=0,sd=20)#
+#
+quartz("",9,6);par(mai=c(1.5,0,0.75,0.5),omi=c(0,1,0,0))#
+## Plot 1#
+plot(1,1,xlim=c(-100,100),ylim=c(0,0.03),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n",yaxs="i")#
+polygon(c(x,rev(x)),c(y1,rep(0,length(x))),col="wheat2")#
+points(x,y1,type="l",lwd=4)#
+axis(side=1,at=seq(-100,100,50),font=2,lwd=4,cex.axis=2,labels=F)#
+axis(side=1,tick=F,line=0.5,at=seq(-100,100,50),font=2,cex.axis=2)#
+mtext(side=1,line=4,text="Voice Onset Time",font=2,cex=2)
 head(RPT)
 ## Bodo Winter#
-## April 25, 2015; Added new analyses: June 19, 2015#
-## Visualizations of Rapid Prosody Transcription Data#
+## March 12, 2015; Major overhaul June 19, 2015#
+## Preprocessing script#
+#
 #########################################################################
 ######################## Load in data:#
 #########################################################################
 #
+## Load in libraries:#
+#
+library(reshape2)#
+library(dplyr)#
+library(xlsx)#
+#
 ## Path for main analysis:#
 #
 mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"#
 setwd(mainDir)#
 #
-## Load:#
+## Load in individual data (wide format):#
 #
-RPT <- read.csv("RPT_individual_processed.csv")#
+wide <- read.xlsx("rpt_Einzelwerte-25juli2014-1.xls",#
+	sheetIndex=2,stringsAsFactors=F)#
 #
-## Load in libraries needed:#
+## Load in summary data:#
 #
-library(lme4)
+RPT <- read.xlsx("rpt-Daten-15juli2015.xls",#
+	sheetIndex=1,#
+	stringsAsFactors=F)
+RPT$Satz
+uniqu(RPT$Satz)
+uniqu(RPT$Satz)
+unique(RPT$Satz)
 head(RPT)
+unique(RPT$Sprecher)
+length(unique(RPT$Sprecher))
+length(unique(RPT$Akzentposition))
+length(unique(RPT$Akzenttype))
+length(unique(RPT$Akzenttyp))
+length(unique(RPT$Wort))
+tail(RPT)
+RPT <- RPT[-nrow(RPT),]
+length(unique(RPT$Wort))
+length(unique(RPT$POS))

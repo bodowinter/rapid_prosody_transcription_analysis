@@ -17,16 +17,16 @@ library(xlsx)
 mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"
 setwd(mainDir)
 
-## Load in individual data (wide format):
-
-wide <- read.xlsx("rpt_Einzelwerte-25juli2014-1.xls",
-	sheetIndex=2,stringsAsFactors=F)
-
 ## Load in summary data:
 
 RPT <- read.xlsx("rpt-Daten-15juli2015.xls",
 	sheetIndex=1,
 	stringsAsFactors=F)
+
+## Load in individual data (wide format):
+
+wide <- read.xlsx("rpt_Einzelwerte-25juli2014-1.xls",
+	sheetIndex=2,stringsAsFactors=F)
 
 ## Set working directory to additional information folder and load everything in:
 

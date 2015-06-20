@@ -6,10 +6,6 @@
 ######################## Preliminaries:
 ########################################################################
 
-## Set "plotting" to TRUE to see plots:
-
-plotting = FALSE
-
 ## Load in data:
 
 mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"
@@ -81,11 +77,11 @@ nrow(RPT_accented)/nrow(RPT)		# 37% of the entire data set
 ## Define "uber formula" that I'll use for those models, containing all variables:
 
 the_uber_formula <- as.formula("p_score ~ VowelDur + SyllableDur + RMS_amplitude +
-	LogFreq + MaxPitch + MeanPitch + POS + Nsyll + 
-	AccentPosition + AccentType + POS_class + Vowel + LastArgument + FocusParticle")
+	LogFreq + MaxPitch + MeanPitch + POS + NSyll + 
+	AccentPosition + AccentType + POS_class + Vowel + LastArgument + Focused")
 accented_formula <- as.formula("p_score ~ VowelDur + SyllableDur + RMS_amplitude +
-	LogFreq + MaxPitch + MeanPitch + POS + Nsyll + PichRangeST + PitchSlopeST + 
-	AccentPosition + AccentType + POS_class + Vowel + LastArgument + FocusParticle")
+	LogFreq + MaxPitch + MeanPitch + POS + NSyll + PitchRangeST + PitchSlopeST + 
+	AccentPosition + AccentType + POS_class + Vowel + LastArgument + Focused")
 
 ## Define controls:
 
@@ -104,7 +100,7 @@ forest_KNN <- cforest(the_uber_formula,RPT_KNN,controls=data.controls)
 set.seed(42)
 forest_red <- cforest(the_uber_formula,RPT_red,controls=data.controls)
 set.seed(42)
-forst_accented <- cforest(accented_formula,RPT_accented,controls=data.controls)
+forest_accented <- cforest(accented_formula,RPT_accented,controls=data.controls)
 
 ## Create predictions:
 
@@ -112,15 +108,7 @@ raw_predictions <- predict(forest_raw)
 central_predictions <- predict(forest_central)
 KNN_predictions <- predict(forest_KNN)
 red_predictions <- predict(forest_red)
-accented_predictions <- predict(forst_accented)
-
-## Which one works best?
-
-cor(raw_predictions,RPT$p_score)
-cor(central_predictions,RPT$p_score)
-cor(KNN_predictions,RPT$p_score)
-cor(red_predictions,RPT_red$p_score)
-cor(accented_predictions,RPT_accented$p_score)
+accented_predictions <- predict(forest_accented)
 
 ## Create variable importances, has to be conditional = FALSE for the raw data:
 
@@ -133,7 +121,7 @@ KNN_varimp_conditional <- varimp(forest_KNN,conditional=TRUE)
 set.seed(42)
 red_varimp_conditional <- varimp(forest_red,conditional=TRUE)
 set.seed(42)
-accnted_varimp_conditional <- varimp(forst_accented,conditional=TRUE)
+accnted_varimp_conditional <- varimp(forest_accented,conditional=TRUE)
 
 ## Save all output:
 

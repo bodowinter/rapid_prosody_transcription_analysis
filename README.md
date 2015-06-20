@@ -16,15 +16,15 @@ Statistical analysis of rapid prosody description
 
 ## Script files contained in this analysis:
 
--	001_RPT_individual_analysis_preprocessing.R
+-	*001_RPT_individual_analysis_preprocessing.R*<br>
 	The main preprocessing script, works on Excel files and outputs tidy csv files.
--	002_mixed_model_analyses.R
+-	*002_mixed_model_analyses.R*<br>
 	Computes mixed models (but does not interpret and visualize them). Warning: Takes a lot of time to run.
--	003_random_forest_analyses.R
+-	*003_random_forest_analyses.R*<br>
 	Computes random forests and variable importances (but does not interpret and visualize them). Warning: Takes a lot of tim to run.
--	004_random_forest_visualization.R
+-	*004_random_forest_visualization.R*<br>
 	Interprets and visualizes random forests.
--	005_visualizations.R
+-	*005_visualizations.R*<br>
 	Interprets and visualizes mixed models and other analyses.
 
 

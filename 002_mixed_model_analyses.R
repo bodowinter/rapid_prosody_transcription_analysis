@@ -77,7 +77,8 @@ contrasts(RPT$AccentType_c)[5,] <- c(1,0,0,0)
 
 ## Create a "word nested within sentence" variable:
 
-RPT$WordWithinSentence <- paste(RPT$Word,RPT$Sentence,sep=":")
+RPT$WordWithinSentence <- 1:562
+# RPT$WordWithinSentence <- paste(RPT$Word,RPT$Sentence,sep=":")
 
 
 
@@ -209,14 +210,14 @@ save.image("mixed_models.RData")
 
 ## Log frequency:
 
-xmdl.Freq = glmer(Prominence ~ LogFrequency_z +
-	(1|Listener) + (0+LogFrequency_z|Listener) + 
-	(1|Speaker) + (0+LogFrequency_z|Speaker) + 
+xmdl.Freq = glmer(Prominence ~ LogFreq_z +
+	(1|Listener) + (0+LogFreq_z|Listener) + 
+	(1|Speaker) + (0+LogFreq_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
 xmdl.Freq.Null = glmer(Prominence ~ 1 +
-	(1|Listener) + (0+LogFrequency_z|Listener) + 
-	(1|Speaker) + (0+LogFrequency_z|Speaker) + 
+	(1|Listener) + (0+LogFreq_z|Listener) + 
+	(1|Speaker) + (0+LogFreq_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
 save.image("mixed_models.RData")
@@ -249,19 +250,19 @@ xmdl.POS_class.Null = glmer(Prominence ~ 1 +
 	RPT,family="binomial")
 save.image("mixed_models.RData")
 
-## Part of Speech:
+# ## Part of Speech (this will never converge):
 
-xmdl.POS = glmer(Prominence ~ POS_c +
-	(1|Listener) + (0+POS_c|Listener) + 
-	(1|Speaker) + (0+POS_c|Speaker) + 
-	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.POS.Null = glmer(Prominence ~ 1 +
-	(1|Listener) + (0+POS_c|Listener) + 
-	(1|Speaker) + (0+POS_c|Speaker) + 
-	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+# xmdl.POS = glmer(Prominence ~ POS_c +
+	# (1|Listener) + (0+POS_c|Listener) + 
+	# (1|Speaker) + (0+POS_c|Speaker) + 
+	# (1|WordWithinSentence) + (1|Sentence),
+	# RPT,family="binomial")
+# xmdl.POS.Null = glmer(Prominence ~ 1 +
+	# (1|Listener) + (0+POS_c|Listener) + 
+	# (1|Speaker) + (0+POS_c|Speaker) + 
+	# (1|WordWithinSentence) + (1|Sentence),
+	# RPT,family="binomial")
+# save.image("mixed_models.RData")
 
 ## AccentType:
 
@@ -292,171 +293,4 @@ xmdl.AccentPosition.Null = glmer(Prominence ~ 1 +
 save.image("mixed_models.RData")
 
 
-
-
-########################################################################
-######################## Make plots:
-########################################################################
-
-## Write a function that computes fitted values and standard errors based on a single fixed effect object:
-
-predict.logisticLMM = function(fit,min,max){
-	xvals = seq(min,max,0.1)
-	newdata = data.frame(xvals)
-	names(newdata) = names(fixef(fit)[2])
-	newdata$Prominence = 0
-	mm = model.matrix(terms(fit),newdata)
-	newdata$Prominence = predict(fit,newdata,re.form=NA)
-	pvar1 = diag(mm %*% tcrossprod(vcov(fit),mm))
-	newdata$UB = logit.inv(newdata$Prominence + 1.96*sqrt(pvar1))
-	newdata$LB = logit.inv(newdata$Prominence - 1.96*sqrt(pvar1))
-	return(newdata)
-	}
-
-predict.logistic_cat = function(fit,data,var="AccentPosition"){
-	newdata = data.frame(unique(data[,var]))
-	names(newdata) = var
-	newdata$Prominence = 0
-	mm = model.matrix(terms(fit),newdata)
-	newdata$Prominence = predict(fit,newdata,re.form=NA)
-	pvar1 = diag(mm %*% tcrossprod(vcov(fit),mm))
-	newdata$UB = logit.inv(newdata$Prominence + 1.96*sqrt(pvar1))
-	newdata$LB = logit.inv(newdata$Prominence - 1.96*sqrt(pvar1))
-	return(newdata)
-	}
-
-## Write a function that creates nice plots for logistic models:
-
-cont.PP = function(newdata,xlims,xaxis,xlabel){
-	quartz("",9,6);par(mai=c(1.25,1.5,0.75,0.5))
-	plot(1,1,type="n",xlim=xlims,ylim=c(-0.1,1.1),xaxs="i",xaxt="n",yaxt="n",xlab="",ylab="")
-	axis(side=2,at=c(0,1),labels=c("not\nprominent","prominent"),las=2,font=2,lwd=4,lwd.ticks=4,cex.axis=1.25)
-	axis(side=1,at=xaxis,labels=xaxis,font=2,cex.axis=1.25,lwd=4,lwd.ticks=4)
-	mtext(side=1,line=3,text=xlabel,font=2,cex=1.5)
-	polygon(c(newdata[,1],rev(newdata[,1])),
-		c(newdata$UB,rev(newdata$LB)),col=rgb(0,0,0,0.3),border=F)
-	points(newdata[,1],logit.inv(newdata$Prominence),lwd=5,type="l",col="darkred")
-	abline(h=0,lty=2,lwd=4)
-	abline(h=1,lty=2,lwd=4)
-	box(lwd=4)
-	}
-
-cat.PP = function(newdata,xlabel){
-	quartz("",9,6);par(mai=c(1.25,1.5,0.75,0.5))
-	plot(1,1,type="n",
-		xlim=c(1-0.5,nrow(newdata)+0.5),ylim=c(-0.1,1.1),
-		xaxs="i",xaxt="n",yaxt="n",xlab="",ylab="")
-	axis(side=2,at=c(0,1),labels=c("not\nprominent","prominent"),las=2,font=2,lwd=4,lwd.ticks=4,cex.axis=1.25)
-	axis(side=1,at=1:nrow(newdata),labels=newdata[,1],font=2,cex.axis=1.25,lwd=4,lwd.ticks=4)
-	mtext(xlabel,sid=1,line=3,font=2,cex=1.5)
-	points(1:nrow(newdata),logit.inv(newdata$Prominence),pch=19,cex=1.5)
-	arrows(1:nrow(newdata),y0=newdata$LB,y1=newdata$UB,angle=90,code=3,length=0.15,lwd=2)
-	abline(h=0,lty=2,lwd=4)
-	abline(h=1,lty=2,lwd=4)
-	box(lwd=4)
-	}
-
-
-## MeanPitch:
-
-xmdl.MeanPitch = glmer(Prominence ~ MeanPitch +
-	(1+MeanPitch|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.MeanPitch,80,380)
-cont.PP(newdata,xlims=c(80,380),xaxis=seq(80,380,20),xlabel="Mean Pitch (Hz, by Word)")
-
-## MaxPitch:
-
-xmdl.MaxPitch = glmer(Prominence ~ MaxPitch +
-	(1+MaxPitch|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.MaxPitch,80,480)
-cont.PP(newdata,xlims=c(80,480),xaxis=seq(80,480,80),xlabel="Max Pitch (Hz, by Word)")
-
-## RangeST:
-
-ind$AbsRang = abs(ind$RangeST)
-indRange = ind[complete.cases(ind$RangeST),]
-xmdl.AbsRang = glmer(Prominence ~ AbsRang +
-	(1+AbsRang|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.AbsRang,0,15)
-cont.PP(newdata,xlims=c(0,15),xaxis=seq(0,15,5),xlabel="Absolute Range (semitones, by Word)")
-
-## RMS_amplitude:
-
-xmdl.RMS = glmer(Prominence ~ RMS_amplitude +
-	(1+RMS_amplitude|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.RMS,50,100)
-cont.PP(newdata,xlims=c(50,100),xaxis=seq(50,100,25),xlabel="RMS Amplitude")
-
-## Vowel Dur:
-
-xmdl.VowelDur = glmer(Prominence ~ VowelDur +
-	(1+VowelDur|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.VowelDur,0,250)
-cont.PP(newdata,xlims=c(0,250),xaxis=seq(0,250,50),xlabel="Vowel Duration")
-
-## LogFrequency:
-
-xmdl.Freq = glmer(Prominence ~ LogFrequency +
-	(1+LogFrequency|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.Freq,0,15)
-cont.PP(newdata,xlims=c(0,15),xaxis=seq(0,15,2.5),xlabel="Log Frequency")
-
-## Repetition:
-
-xmdl.Rep = glmer(Prominence ~ WordRepetition +
-	(1+WordRepetition|Speaker),
-	ind,family="binomial")
-newdata = predict.logisticLMM(xmdl.Rep,0,20)
-cont.PP(newdata,xlims=c(0,10),xaxis=seq(0,10,2.5),xlabel="Word Repetition")
-
-## CATGORICAL: Accent Position:
-
-xmdl.Accent = glmer(Prominence ~ AccentPosition +
-	(1|Speaker),
-	ind,family="binomial")
-newdata = predict.logistic_cat(xmdl.Accent,ind,"AccentPosition")
-newdata = newdata[order(newdata$Prominence),]
-cat.PP(newdata,"Accent Position")
-
-## CATGORICAL: Accent Position:
-
-xmdl.AccentType = glmer(Prominence ~ AccentType +
-	(1|Speaker),
-	ind,family="binomial")
-newdata = predict.logistic_cat(xmdl.AccentType,ind,"AccentType")
-newdata = newdata[order(newdata$Prominence),]
-cat.PP(newdata,"Accent Type")
-
-## CATGORICAL: Accent Position:
-
-xmdl.POS = glmer(Prominence ~ POS_class +
-	(1|Speaker),
-	ind,family="binomial")
-newdata = predict.logistic_cat(xmdl.POS,ind,"POS_class")
-newdata = newdata[order(newdata$Prominence),]
-cat.PP(newdata,"Part of Speech Type")
-
-## CATGORICAL: Accent Position:
-
-xmdl.Vowel = glmer(Prominence ~ Vowel +
-	(1|Speaker),
-	ind,family="binomial")
-newdata = predict.logistic_cat(xmdl.Vowel,ind,"Vowel")
-newdata = newdata[order(newdata$Prominence),]
-cat.PP(newdata,"Phonological Vowel Length")
-
-
-
-## This is the full model structure that I want to use when I have time:
-
-xmdl.MeanPitch = glmer(Prominence ~ MeanPitch +
-	(1+MeanPitch|Listener) + (1+MeanPitch|Speaker) +
-	(1|NewSentenceIdentifiers) + (1|Word),
-	ind,family="binomial")
 

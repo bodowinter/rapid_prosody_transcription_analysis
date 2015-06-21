@@ -106,7 +106,7 @@ rm(forest_raw,raw_predictions,raw_varimp)
 set.seed(42)
 forest_central <- cforest(the_uber_formula,RPT_central,controls=data.controls)
 central_predictions <- predict(forest_central)
-central_varimp_conditional <- varimp(forest_central,conditional=TRUE)
+central_varimp_conditional <- varimp(forest_central,conditional=FALSE)
 save(forest_central,central_predictions,central_varimp_conditional,file="central_forests.RData")
 
 ## Remove old baggage to gain memory:
@@ -118,7 +118,7 @@ rm(forest_central,central_predictions,central_varimp_conditional)
 set.seed(42)
 forest_KNN <- cforest(the_uber_formula,RPT_KNN,controls=data.controls)
 KNN_predictions <- predict(forest_KNN)
-KNN_varimp_conditional <- varimp(forest_KNN,conditional=TRUE)
+KNN_varimp_conditional <- varimp(forest_KNN,conditional=FALSE)
 save(forest_KNN,KNN_predictions,KNN_varimp_conditional,file="KNN_forests.RData")
 
 ## Remove old baggage to gain memory:
@@ -130,7 +130,7 @@ rm(forest_KNN,KNN_predictions,KNN_varimp_conditional)
 set.seed(42)
 forest_red <- cforest(the_uber_formula,RPT_red,controls=data.controls)
 red_predictions <- predict(forest_red)
-red_varimp_conditional <- varimp(forest_red,conditional=TRUE)
+red_varimp_conditional <- varimp(forest_red,conditional=FALSE)
 save(forest_red,red_predictions,red_varimp_conditional,file="reduced_forests.RData")
 
 ## Remove old baggage to gain memory:
@@ -142,5 +142,5 @@ rm(forest_red,red_predictions,red_varimp_conditional)
 set.seed(42)
 forest_accented <- cforest(accented_formula,RPT_accented,controls=data.controls)
 accented_predictions <- predict(forest_accented)
-accented_varimp_conditional <- varimp(forest_accented,conditional=TRUE)
+accented_varimp_conditional <- varimp(forest_accented,conditional=FALSE)
 save(forest_accented,accented_predictions,accented_varimp_conditional,file="accented_forests.RData")

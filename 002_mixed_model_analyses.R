@@ -78,7 +78,6 @@ contrasts(RPT$AccentType_c)[5,] <- c(1,0,0,0)
 ## Create a "word nested within sentence" variable:
 
 RPT$WordWithinSentence <- 1:562
-# RPT$WordWithinSentence <- paste(RPT$Word,RPT$Sentence,sep=":")
 
 
 
@@ -88,39 +87,37 @@ RPT$WordWithinSentence <- 1:562
 
 ## First, let's test the gender effects:
 
-xmdl.Gender <- glmer(Prominence ~ ListenerGender*SpeakerGender +
-	(1|Listener) + (0+SpeakerGender|Listener) +
-	(1|Speaker) + (0+ListenerGender|Speaker) + 
+xmdl.Gender <- glmer(Prominence ~ ListenerGender_c*SpeakerGender_c +
+	(1|Listener) + 
+	(1|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
 
 ## MaxPitch model:
 
-xmdl.MaxPitch <- glmer(Prominence ~ MaxPitch_z + 
+xmdl.MaxPitch.bobyqa <- glmer(Prominence ~ MaxPitch_z + SpeakerGender_c + 
 	(1|Listener) + (0+MaxPitch_z|Listener) + 
 	(1|Speaker) + (0+MaxPitch_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.MaxPitch.Null <- glmer(Prominence ~ 1 + 
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.MaxPitch.Null.bobyqa <- glmer(Prominence ~ 1 + SpeakerGender_c + 
 	(1|Listener) + (0+MaxPitch_z|Listener) + 
 	(1|Speaker) + (0+MaxPitch_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
 ## MeanPitch model:
 
-xmdl.MeanPitch = glmer(Prominence ~ MeanPitch_z +
+xmdl.MeanPitch.bobyqa = glmer(Prominence ~ MeanPitch_z + SpeakerGender_c + 
 	(1|Listener) + (0+MeanPitch_z|Listener) + 
 	(1|Speaker) + (0+MeanPitch_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.MeanPitch.Null = glmer(Prominence ~ 1 +
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.MeanPitch.Null.bobyqa = glmer(Prominence ~ 1 + SpeakerGender_c + 
 	(1|Listener) + (0+MeanPitch_z|Listener) + 
 	(1|Speaker) + (0+MeanPitch_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
 ## RMS_amplitude:
 
@@ -134,37 +131,34 @@ xmdl.RMS_amplitude.Null = glmer(Prominence ~ 1 +
 	(1|Speaker) + (0+RMS_amplitude_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
-save.image("mixed_models.RData")
 
 ## VowelDur:
 
-xmdl.VowelDur = glmer(Prominence ~ VowelDur_z +
+xmdl.VowelDur.bobyqa  = glmer(Prominence ~ VowelDur_z +
 	(1|Listener) + (0+VowelDur_z|Listener) + 
 	(1|Speaker) + (0+VowelDur_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.VowelDur.Null = glmer(Prominence ~ VowelDur_z +
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.VowelDur.Null.bobyqa  = glmer(Prominence ~ 1 +
 	(1|Listener) + (0+VowelDur_z|Listener) + 
 	(1|Speaker) + (0+VowelDur_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
 ## SyllableDur:
 
-xmdl.SyllableDur = glmer(Prominence ~ SyllableDur_z +
+mdl.SyllableDur.bobyqa = glmer(Prominence ~ SyllableDur_z +
 	(1|Listener) + (0+SyllableDur_z|Listener) + 
 	(1|Speaker) + (0+SyllableDur_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.SyllableDur.Null = glmer(Prominence ~ 1 +
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.SyllableDur.Null.bobyqa = glmer(Prominence ~ 1 +
 	(1|Listener) + (0+SyllableDur_z|Listener) + 
 	(1|Speaker) + (0+SyllableDur_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
-## SyllableDur:
+## No. of Syllables:
 
 xmdl.NSyll = glmer(Prominence ~ NSyll_z +
 	(1|Listener) + (0+NSyll_z|Listener) + 
@@ -176,7 +170,6 @@ xmdl.NSyll.Null = glmer(Prominence ~ 1 +
 	(1|Speaker) + (0+NSyll_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
-save.image("mixed_models.RData")
 
 ## RangeST:
 
@@ -191,7 +184,6 @@ xmdl.RangeST.Null = glmer(Prominence ~ 1 +
 	(1|Speaker) + (0+PitchRangeST_abs_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
-save.image("mixed_models.RData")
 
 ## SlopeST:
 
@@ -206,7 +198,6 @@ xmdl.SlopeST.Null = glmer(Prominence ~ 1 +
 	(1|Speaker) + (0+PitchSlopeST_abs_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
-save.image("mixed_models.RData")
 
 ## Log frequency:
 
@@ -220,77 +211,116 @@ xmdl.Freq.Null = glmer(Prominence ~ 1 +
 	(1|Speaker) + (0+LogFreq_z|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
 	RPT,family="binomial")
-save.image("mixed_models.RData")
 
 ## Phonological Vowel Duration:
 
-xmdl.Vowel = glmer(Prominence ~ Vowel_c +
+xmdl.Vowel.bobyqa = glmer(Prominence ~ Vowel_c +
 	(1|Listener) + (0+Vowel_c|Listener) + 
 	(1|Speaker) + (0+Vowel_c|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.Vowel.Null = glmer(Prominence ~ 1 +
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.Vowel.Null.bobyqa = glmer(Prominence ~ 1 +
 	(1|Listener) + (0+Vowel_c|Listener) + 
 	(1|Speaker) + (0+Vowel_c|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
 ## Part of Speech class:
 
-xmdl.POS_class = glmer(Prominence ~ POS_class_c +
+xmdl.POS_class.bobyqa = glmer(Prominence ~ POS_class_c +
 	(1|Listener) + (0+POS_class_c|Listener) + 
 	(1|Speaker) + (0+POS_class_c|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.POS_class.Null = glmer(Prominence ~ 1 +
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.POS_class.Null.bobyqa = glmer(Prominence ~ 1 +
 	(1|Listener) + (0+POS_class_c|Listener) + 
 	(1|Speaker) + (0+POS_class_c|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
-# ## Part of Speech (this will never converge):
+## Focus particle:
 
-# xmdl.POS = glmer(Prominence ~ POS_c +
-	# (1|Listener) + (0+POS_c|Listener) + 
-	# (1|Speaker) + (0+POS_c|Speaker) + 
-	# (1|WordWithinSentence) + (1|Sentence),
-	# RPT,family="binomial")
-# xmdl.POS.Null = glmer(Prominence ~ 1 +
-	# (1|Listener) + (0+POS_c|Listener) + 
-	# (1|Speaker) + (0+POS_c|Speaker) + 
-	# (1|WordWithinSentence) + (1|Sentence),
-	# RPT,family="binomial")
-# save.image("mixed_models.RData")
-
-## AccentType:
-
-xmdl.AccentType = glmer(Prominence ~ AccentType_c +
-	(1|Listener) + (0+AccentType_c|Listener) + 
-	(1|Speaker) + (0+AccentType_c|Speaker) + 
+xmdl.Focused.bobyqa = glmer(Prominence ~ Focused +
+	(1|Listener) + (0+Focused|Listener) + 
+	(1|Speaker) + (0+Focused|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.AccentType.Null = glmer(Prominence ~ 1 +
-	(1|Listener) + (0+AccentType_c|Listener) + 
-	(1|Speaker) + (0+AccentType_c|Speaker) + 
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.Focused.Null.bobyqa = glmer(Prominence ~ 1 +
+	(1|Listener) + (0+Focused|Listener) + 
+	(1|Speaker) + (0+Focused|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
-## AccentPosition:
+## Last argument:
 
-xmdl.AccentPosition = glmer(Prominence ~ AccentPosition_c +
+xmdl.argument.bobyqa = glmer(Prominence ~ LastArgument +
+	(1|Listener) + (0+LastArgument|Listener) + 
+	(1|Speaker) + (0+LastArgument|Speaker) + 
+	(1|WordWithinSentence) + (1|Sentence),
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.argument.Null.bobyqa = glmer(Prominence ~ 1 +
+	(1|Listener) + (0+LastArgument|Listener) + 
+	(1|Speaker) + (0+LastArgument|Speaker) + 
+	(1|WordWithinSentence) + (1|Sentence),
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+
+## To make AccentType and AccentPosition converge, find offending conditions:
+
+RPT_red <- filter(RPT,AccentPosition!="postnuclear")
+RPT_red <- filter(RPT_red,AccentPosition!="no_accent")
+RPT_red$AccentPosition <- factor(RPT_red$AccentPosition)
+
+RPT_red$AccentPosition_c <- RPT_red$AccentPosition
+contrasts(RPT_red$AccentPosition_c) <- contr.sum(3)
+
+xmdl.AccentPosition.bobyqa = glmer(Prominence ~ AccentPosition_c +
 	(1|Listener) + (0+AccentPosition_c|Listener) + 
 	(1|Speaker) + (0+AccentPosition_c|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-xmdl.AccentPosition.Null = glmer(Prominence ~ 1 +
+	RPT_red,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.AccentPosition.Null.bobyqa = glmer(Prominence ~ 1 +
 	(1|Listener) + (0+AccentPosition_c|Listener) + 
 	(1|Speaker) + (0+AccentPosition_c|Speaker) + 
 	(1|WordWithinSentence) + (1|Sentence),
-	RPT,family="binomial")
-save.image("mixed_models.RData")
+	RPT_red,family="binomial",control=glmerControl(optimizer="bobyqa"))
 
+
+## To make AccentType and AccentPosition converge, find offending conditions:
+
+RPT_red <- filter(RPT,AccentType!="no_accent")
+RPT_red$AccentType <- factor(RPT_red$AccentType)
+
+RPT_red$AccentType_c <- RPT_red$AccentType
+contrasts(RPT_red$AccentType_c) <- contr.sum(4)
+
+xmdl.AccentType.bobyqa = glmer(Prominence ~ AccentType_c +
+	(1|Listener) + (0+AccentType_c|Listener) + 
+	(1|Speaker) + (0+AccentType_c|Speaker) + 
+	(1|WordWithinSentence) + (1|Sentence),
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.AccentType.Null.bobyqa = glmer(Prominence ~ 1 +
+	(1|Listener) + (0+AccentType_c|Listener) + 
+	(1|Speaker) + (0+AccentType_c|Speaker) + 
+	(1|WordWithinSentence) + (1|Sentence),
+	RPT_red,family="binomial",control=glmerControl(optimizer="bobyqa"))
+
+## Test accented versus non-accented:
+
+RPT$Accented <- factor(ifelse(RPT$AccentType=="no_accent","no","yes"))
+RPT$Accented_c <- RPT$Accented
+contrasts(RPT$Accented_c) = contr.sum(2)
+
+xmdl.Accented.bobyqa = glmer(Prominence ~ Accented_c +
+	(1|Listener) + (0+Accented_c|Listener) + 
+	(1|Speaker) + (0+Accented_c|Speaker) + 
+	(1|WordWithinSentence) + (1|Sentence),
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+xmdl.Accented.Null.bobyqa = glmer(Prominence ~ 1 +
+	(1|Listener) + (0+Accented_c|Listener) + 
+	(1|Speaker) + (0+Accented_c|Speaker) + 
+	(1|WordWithinSentence) + (1|Sentence),
+	RPT,family="binomial",control=glmerControl(optimizer="bobyqa"))
+
+save.image("mixed_models.RData")
 
 

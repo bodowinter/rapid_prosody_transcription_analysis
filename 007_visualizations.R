@@ -41,6 +41,7 @@ ggplot(RPT,aes(AccentType,p_score,fill=AccentType)) + geom_boxplot() +
 		axis.text.x=element_text(face="bold"),
 		axis.title.x=element_text(face="bold"),
 		strip.text.x = element_text(size=20,face="bold",vjust=2))
+ggsave("plot1.png")
 
 ## Make a boxplot of just Accent Position:
 
@@ -55,6 +56,7 @@ ggplot(RPT,aes(AccentPosition,p_score,fill=AccentPosition)) + geom_boxplot() +
 		axis.text.x=element_text(face="bold"),
 		axis.title.x=element_text(face="bold"),
 		strip.text.x = element_text(size=20,face="bold",vjust=2))
+ggsave("plot2.png")
 
 ## Make a boxplot of number of syllables:
 
@@ -70,8 +72,9 @@ ggplot(subs,aes(NSyll,p_score,fill=NSyll)) + geom_boxplot() +
 		axis.text.x=element_text(face="bold"),
 		axis.title.x=element_text(face="bold"),
 		strip.text.x=element_text(size=20,face="bold",vjust=2))
+ggsave("plot3.png")
 
-## Make a boxplot of Phonological Vowel Length:
+## Make a boxplot of Last Argument:
 
 RPT$LastArgument <- factor(ifelse(as.character(RPT$LastArgument)=="not_last","no","yes"))
 
@@ -87,6 +90,7 @@ ggplot(RPT,aes(LastArgument,p_score,fill=LastArgument)) + geom_boxplot() +
 		axis.title.x=element_text(face="bold"),
 		strip.text.x = element_text(size=20,face="bold",vjust=2),
 		legend.position="none")
+ggsave("plot4.png")
 
 ## Make a boxplot of Phonological Vowel Length:
 
@@ -104,6 +108,7 @@ ggplot(RPT,aes(Vowel,p_score,fill=Vowel)) + geom_boxplot() +
 		axis.title.x=element_text(face="bold"),
 		strip.text.x = element_text(size=20,face="bold",vjust=2),
 		legend.position="none")
+ggsave("plot5.png")
 
 ## Make a boxplot of Focused:
 
@@ -122,7 +127,7 @@ ggplot(RPT,aes(Focused,p_score,fill=Focused)) + geom_boxplot() +
 		axis.title.x=element_text(face="bold"),
 		strip.text.x = element_text(size=20,face="bold",vjust=2),
 		legend.position="none")
-
+ggsave("plot6.png")
 
 
 ########################################################################
@@ -156,7 +161,7 @@ p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition
 		axis.text.x=element_text(face="bold"),
 		axis.title.x=element_text(face="bold"),
 		strip.text.x = element_text(size=20,face="bold",vjust=2))
-
+ggsave("plot7.png")
 
 
 ########################################################################
@@ -177,7 +182,7 @@ subs$POS <- factor(as.character(subs$POS),
 quartz("",9,5)
 ggplot(subs,
 	aes(x=POS,y=p_score,fill=POS)) + geom_bar(stat="identity",width=1,color="black") +
-	scale_fill_manual(values=colorRampPalette(c("#fdf0e0","#f28c3a",))(12)) +
+	scale_fill_manual(values=colorRampPalette(c("#fdf0e0","#f28c3a","#a5361d"))(12)) +
 	geom_errorbar(aes(ymin=p_score-SE,ymax=p_score+SE),width=0.2) + 
 	coord_cartesian(ylim=c(0,100)) + 
 	labs(y="Prominence Score",x="\nPart of Speech") + 
@@ -188,7 +193,7 @@ ggplot(subs,
 		axis.title.x=element_text(face="bold"),
 		strip.text.x=element_text(size=20,face="bold",vjust=2),
 		legend.position="none")
-
+ggsave("plot8.png")
 
 ########################################################################
 ######################## Plots requested by Stefan #3: Focus particle
@@ -208,7 +213,7 @@ subs$Focused <- factor(subs$Focused,levels=c("Not Focused","Focused"))
 quartz("",9,5)
 p <- ggplot(subs,
 	aes(x=Focused,y=p_score,fill=AccentPosition))
-p + geom_bar(stat="identity",width=1,color="black") + facet_wrap(~AccentPosition) +
+p + geom_bar(stat="identity",width=1,color="black",position="dodge") + facet_wrap(~AccentPosition) +
 	geom_errorbar(aes(ymin=p_score-SE,ymax=p_score+SE),width=0.2) + 
 	scale_fill_manual(values=c("#f6b884","#dc7331")) + 
 	coord_cartesian(ylim=c(0,100)) + 

@@ -51,6 +51,10 @@ RPT$WordWithinSentence <- 1:562
 RPT <- mutate(RPT,
 	SpeakerGender_c = ifelse(SpeakerGender == 'M', 0.5, -0.5))
 
+## Write to table:
+
+write.table(RPT, 'RPT_individual_processed_with_z.csv', sep = ',', row.names = F)
+
 
 
 ##------------------------------------------------------------------

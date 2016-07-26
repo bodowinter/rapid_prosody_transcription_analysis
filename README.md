@@ -30,7 +30,9 @@ Statistical analysis of rapid prosody description
 ## Data files contained in this analysis:
 
 -	**rpt-Daten-15juli2015.xls**
-	Contains all summary data, that is, prominence score averages (overa all listeners) for each word.
+	Contains all summary data, that is, prominence score averages (overa all listeners) for each word
+-	**rpt-Daten-31juli2015_spectral_tilt.xls**
+	This is the most up-to-date file of the summary data
 -	**rpt_Einzelwerte-25juli2014-1.xls**
 	Contains individual level data, that is, all prominence ratings from each listener (wide format)
 -	**RPT_summary_processed.csv**

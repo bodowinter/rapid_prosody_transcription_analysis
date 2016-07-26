@@ -8,11 +8,11 @@ Statistical analysis of rapid prosody description
 ## Libraries required for this analysis:
 
 -	lme4
--	dplyr
--	DMwR
--	reshape2
 -	party
--	ggplot2
+-	DMwR
+-	dplyr
+-	reshape2
+-	xlsx
 
 ## Script files contained in this analysis:
 

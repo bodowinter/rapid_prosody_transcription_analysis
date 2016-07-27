@@ -124,10 +124,10 @@ for (i in 1:length(these_models)) {
 
 ## Define data frames with factor levels to get predictions for:
 
-vowel_pred <- data.frame(Vowel = c('short', 'long'))
-POS_pred <- data.frame(POS_class = c('function', 'content'))
-focus_pred <- data.frame(Focused = c('no_focus_particle', 'focus_particle'))
-argument_pred <- data.frame(LastArgument = c('not_last', 'last'))
+vowel_pred <- data.frame(Vowel_c = c('short', 'long'))
+POS_pred <- data.frame(POS_class_c = c('function', 'content'))
+focus_pred <- data.frame(Focused_c = c('no_focus_particle', 'focus_particle'))
+argument_pred <- data.frame(LastArgument_c = c('not_last', 'last'))
 accented_pred <- data.frame(Accented_c = c('no', 'yes'))
 position_pred <- data.frame(AccentPosition_c = c('prenuclear', 'nuclear_ip', 'nuclear_IP'))
 type_pred <- data.frame(AccentType_c = c('low', 'falling', 'high', 'rising'))
@@ -138,9 +138,9 @@ vowel_pred <- predict.glmm(xmdl.Vowel, newdata = vowel_pred, type = 'binomial')
 POS_pred <- predict.glmm(xmdl.POS_class, newdata = POS_pred, type = 'binomial')
 focus_pred <- predict.glmm(xmdl.Focused, newdata = focus_pred, type = 'binomial')
 argument_pred <- predict.glmm(xmdl.argument, newdata = argument_pred, type = 'binomial')
-accented_pred <- predict.glmm(xmdl.Accented.bobyqa, newdata = accented_pred, type = 'binomial')
-position_pred <- predict.glmm(xmdl.AccentPosition.bobyqa, newdata = position_pred, type = 'binomial')
-type_pred <- predict.glmm(xmdl.AccentType.bobyqa, newdata = type_pred, type = 'binomial')
+accented_pred <- predict.glmm(xmdl.Accented, newdata = accented_pred, type = 'binomial')
+position_pred <- predict.glmm(xmdl.AccentPosition, newdata = position_pred, type = 'binomial')
+type_pred <- predict.glmm(xmdl.AccentType, newdata = type_pred, type = 'binomial')
 
 
 

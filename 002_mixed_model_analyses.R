@@ -8,6 +8,10 @@
 ## Load in data and packages:
 ##------------------------------------------------------------------
 
+## Set options:
+
+options(StringsAsFactors = T)
+
 ## Path for main analysis:
 
 mainDir <- '/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data'
@@ -213,11 +217,11 @@ xmdl.Vowel.Null <- glmer(Prominence ~ 1 +
 ## Part of Speech class model and null model (categorical effect, 2 levels):
 
 RPT$POS_class_c <- as.numeric(RPT$POS_class) - 1.5
-xmdl.POS_class <- glmer(Prominence ~ POS_class_c +
+xmdl.POS <- glmer(Prominence ~ POS_class_c +
 	(1|Listener) + (0 + POS_class_c|Listener) +
 	(1|Speaker) + (1|Sentence),	# no word because the variance was conflated with POS(?)
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
-xmdl.POS_class.Null <- glmer(Prominence ~ 1 +
+xmdl.POS.Null <- glmer(Prominence ~ 1 +
 	(1 + POS_class|Listener) + 
 	(1|Speaker) + (1|Sentence),
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
@@ -227,7 +231,7 @@ xmdl.POS_class.Null <- glmer(Prominence ~ 1 +
 RPT$Focused_c <- as.numeric(RPT$Focused) - 1.5
 xmdl.Focused <- glmer(Prominence ~ Focused_c +
 	(1|Listener) + (0 + Focused_c|Listener) +
-	(1|WordWithinSentence),		
+	(1|WordWithinSentence),
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 # by-listener random slopes could only be estimated with "WordWithinSentence" instead of sentence/speaker
 xmdl.Focused.Null <- glmer(Prominence ~ 1 +
@@ -257,12 +261,12 @@ RPT_red$AccentPosition <- factor(RPT_red$AccentPosition)
 RPT_red$AccentPosition_c <- RPT_red$AccentPosition
 contrasts(RPT_red$AccentPosition_c) <- contr.sum(3)
 
-xmdl.AccentPosition.bobyqa = glmer(Prominence ~ AccentPosition_c +
+xmdl.AccentPosition = glmer(Prominence ~ AccentPosition_c +
 	(1|Listener) + (0 + AccentPosition_c|Listener),
 	RPT_red, family = 'binomial',
 	control = glmerControl(optimizer = 'bobyqa'))
 # model with sentence and speaker converged but were deprecate / variances not estimated
-xmdl.AccentPosition.Null.bobyqa = glmer(Prominence ~ 1 +
+xmdl.AccentPosition.Null = glmer(Prominence ~ 1 +
 	(1|Listener) + (0 + AccentPosition_c|Listener),
 	RPT_red, family = 'binomial',
 	control = glmerControl(optimizer = 'bobyqa'))
@@ -275,12 +279,12 @@ RPT_red$AccentType <- factor(RPT_red$AccentType)
 RPT_red$AccentType_c <- RPT_red$AccentType
 contrasts(RPT_red$AccentType_c) <- contr.sum(4)
 
-xmdl.AccentType.bobyqa = glmer(Prominence ~ AccentType_c +
+xmdl.AccentType = glmer(Prominence ~ AccentType_c +
 	(1|Listener) + (0 + AccentType_c|Listener),
 	RPT_red, family = 'binomial',
 	control = glmerControl(optimizer = 'bobyqa'))
 # model with sentence and speaker converged but were deprecate / variances not estimated
-xmdl.AccentType.Null.bobyqa = glmer(Prominence ~ 1 +
+xmdl.AccentType.Null = glmer(Prominence ~ 1 +
 	(1|Listener) + (0 + AccentType_c|Listener),
 	RPT_red, family = 'binomial',
 	control = glmerControl(optimizer = 'bobyqa'))
@@ -290,12 +294,12 @@ xmdl.AccentType.Null.bobyqa = glmer(Prominence ~ 1 +
 RPT$Accented <- factor(ifelse(RPT$AccentType == 'no_accent', 'no', 'yes'))
 RPT$Accented_c <- as.numeric(RPT$Accented) - 1.5
 
-xmdl.Accented.bobyqa <- glmer(Prominence ~ Accented_c +
+xmdl.Accented <- glmer(Prominence ~ Accented_c +
 	(1|Listener) + (0 + Accented_c|Listener) +
 	(1|Speaker) + (1|Sentence),
 	RPT, family = 'binomial',
 	control = glmerControl(optimizer = 'bobyqa'))
-xmdl.Accented.Null.bobyqa = glmer(Prominence ~ 1 +
+xmdl.Accented.Null = glmer(Prominence ~ 1 +
 	(1|Listener) + (0 + Accented_c|Listener) +
 	(1|Speaker) + (1|Sentence),
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))

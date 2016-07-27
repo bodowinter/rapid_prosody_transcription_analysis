@@ -1,168 +1,112 @@
 ## Bodo Winter
 ## By-individual analyses
 ## June 22, 2015
+## July 27, 2016: Finishing brushes and incorporation of spectral tilt
+## July 27, 2016: Replaced ggplot2 with base graphs
 
 ## Load mixed models:
 
-mainDir <- "/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data"
+mainDir <- '/Users/teeniematlock/Desktop/research/rapid_prosody_transcription/analysis/data'
 setwd(mainDir)
-load("../mixed_models.RData")
-
-library(ggplot2)
-library(grid)
+load('mixed_models.RData')
 
 ## Generate a matrix with all the listeners' random effects:
 
-allsubs <- data.frame(Subject=rownames(coef(xmdl.MeanPitch.bobyqa)$Listener),
-	Accented=coef(xmdl.Accented.bobyqa)$Listener[,2],		# for more accented
-	MeanPitch=coef(xmdl.MeanPitch.bobyqa)$Listener[,2],
-	MaxPitch=coef(xmdl.MaxPitch.bobyqa)$Listener[,2],
-	Amplitude=coef(xmdl.RMS_amplitude)$Listener[,2],
-	VowelDur=coef(xmdl.VowelDur.bobyqa)$Listener[,2],
-	SyllableDur=coef(xmdl.SyllableDur.bobyqa)$Listener[,2],
-	NSyll=coef(xmdl.NSyll)$Listener[,2],
-	Range=coef(xmdl.RangeST)$Listener[,2],
-	Slope=coef(xmdl.SlopeST)$Listener[,2],
-	Freq=coef(xmdl.Freq)$Listener[,2],
-	Vowel=coef(xmdl.Vowel.bobyqa)$Listener[,2],
-	POS=coef(xmdl.POS_class.bobyqa)$Listener[,1],			# for content
-	Focused=coef(xmdl.Focused.bobyqa)$Listener[,1],			# for focus particle
-	Argument=coef(xmdl.argument.bobyqa)$Listener[,1]			# for last argument
+allsubs <- data.frame(Subject = rownames(coef(xmdl.MeanPitch)$Listener),
+	MeanPitch = coef(xmdl.MeanPitch)$Listener[, 2], 
+	MaxPitch = coef(xmdl.MaxPitch)$Listener[, 2], 
+	Amplitude = coef(xmdl.RMS_amplitude)$Listener[, 2], 
+	VowelDur = coef(xmdl.VowelDur)$Listener[, 2],
+	SyllableDur = coef(xmdl.SyllableDur)$Listener[, 2], 
+	NSyll = coef(xmdl.NSyll)$Listener[, 2], 
+	Range = coef(xmdl.RangeST)$Listener[, 2], 
+	Slope = coef(xmdl.SlopeST)$Listener[, 2], 
+	Freq = coef(xmdl.Freq)$Listener[, 2], 
+	Vowel = coef(xmdl.Vowel)$Listener[, 2], 
+	POS = coef(xmdl.POS_class)$Listener[, 2], 			# for content
+	Focused = coef(xmdl.Focused)$Listener[, 2], 			# for focus particle
+	Argument = coef(xmdl.argument)$Listener[, 2],			# for last argument
+	SpectralEmphasis = coef(xmdl.SpectralEmphasis)$Listener[, 2],
+	H1A2 = coef(xmdl.H1A2)$Listener[, 2],
+	H1A3 = coef(xmdl.H1A3)$Listener[, 2]
 	)
 
-## Generate correlation matrix:
+## Hand-code accenteds:
 
-cor(allsubs[,-1])
-round(cor(allsubs[,c("Accented","Focused","Argument","POS")]),2)
-round(cor(allsubs[,c("POS","MaxPitch","Amplitude","VowelDur")]),2)
+accenteds <- coef(xmdl.Accented.bobyqa)$Listener
+allsubs$Accented <- accenteds$Accented_cyes - accenteds$Accented_cno
 
-## Plot pitch against duration:
+## Add mean absolute change for the multi-level factors:
 
-p <- ggplot(allsubs,aes(x=MeanPitch,y=SyllableDur)) + 
-	labs(x="\nPitch coefficient",y="Duration coefficient\n") + 
-	theme_minimal() + theme(axis.text.y=element_text(face="bold"),
-		axis.title.y=element_text(face="bold",size=20),
-		axis.title.x=element_text(face="bold",size=20),
-		axis.text.x=element_text(face="bold"),
-		axis.title.x=element_text(face="bold"),
-		strip.text.x = element_text(size=20,face="bold",vjust=2))
+allsubs$AccentType <- rowMeans(abs(coef(xmdl.AccentType.bobyqa)$Listener[, 1:4]))
+allsubs$AccentPosition <- rowMeans(abs(coef(xmdl.AccentPosition.bobyqa)$Listener[, c(1, 3, 4)]))
 
-quartz("",9,5)
-p + geom_smooth(method="lm",fill="#dc7331",color="black") + geom_point(shape=16,size=4)
-ggsave("plot9.png")
+## Generate correlation matrices:
 
-summary(lm(MeanPitch ~ SyllableDur,allsubs))
+round(cor(allsubs[, -1]), 2)
+round(cor(allsubs[, c('Accented', 'Focused', 'Argument', 'POS', 'AccentType', 'AccentPosition')]), 2)
+round(cor(allsubs[, c('POS', 'MaxPitch', 'Amplitude', 'VowelDur', 'AccentType', 'AccentPosition')]), 2)
 
-## Plot POS against amplitude:
+## Group variables according to meaningful categories:
 
-p <- ggplot(allsubs,aes(x=POS,y=Amplitude)) + 
-	labs(x="\nPOS coefficient",y="Amplitude coefficient\n") + 
-	theme_minimal() + theme(axis.text.y=element_text(face="bold"),
-		axis.title.y=element_text(face="bold",size=20),
-		axis.title.x=element_text(face="bold",size=20),
-		axis.text.x=element_text(face="bold"),
-		axis.title.x=element_text(face="bold"),
-		strip.text.x = element_text(size=20,face="bold",vjust=2))
+prosodic_variables <- c('Accented', 'AccentPosition', 'AccentType')
+syntactic_variables <- c('Argument', 'Focused', 'POS')
+phonetic_variables <- c('MeanPitch', 'MaxPitch', 'Amplitude', 'VowelDur', 'SyllableDur',
+	'SpectralEmphasis', 'H1A2', 'H1A3')
 
-quartz("",9,5)
-p + geom_smooth(method="lm",fill="#dc7331",color="black") + geom_point(shape=16,size=4)
-ggsave("plot10.png")
+## Create a data frame with means of these variables:
 
-summary(lm(Amplitude ~ POS,allsubs))
+newsubs <- data.frame(Prosody = rowMeans(allsubs[, prosodic_variables]),
+	Syntax = rowMeans(allsubs[, syntactic_variables]),
+	Phonetics = rowMeans(allsubs[, phonetic_variables]),
+	Freq = allsubs$Freq)
 
-## Plot POS against range:
+## Group variables according to different phonetic parameters:
 
-p <- ggplot(allsubs,aes(x=POS,y=Range)) + 
-	labs(x="\nPOS coefficient",y="Pitch Range coefficient\n") + 
-	theme_minimal() + theme(axis.text.y=element_text(face="bold"),
-		axis.title.y=element_text(face="bold",size=20),
-		axis.title.x=element_text(face="bold",size=20),
-		axis.text.x=element_text(face="bold"),
-		axis.title.x=element_text(face="bold"),
-		strip.text.x = element_text(size=20,face="bold",vjust=2))
+pitch <- c('MeanPitch', 'MaxPitch')
+spectrum <- c('SpectralEmphasis', 'H1A2', 'H1A3')
+duration <- c('VowelDur', 'SyllableDur')
 
-quartz("",9,5)
-p + geom_smooth(method="lm",fill="#dc7331",color="black") + geom_point(shape=16,size=4)
-ggsave("plot11.png")
+## Create a data frame with means of these variables:
 
-## Plot Focused against Last Argument:
+subsphon <- data.frame(Pitch = rowMeans(allsubs[, pitch]),
+	Spectrum = rowMeans(abs(allsubs[, spectrum])),
+	Duration = rowMeans(allsubs[, duration]))
 
-p <- ggplot(allsubs,aes(x=Focused,y=Argument)) + 
-	labs(x="\nFocus particle coefficient",y="Last Argument coefficient\n") + 
-	theme_minimal() + theme(axis.text.y=element_text(face="bold"),
-		axis.title.y=element_text(face="bold",size=20),
-		axis.title.x=element_text(face="bold",size=20),
-		axis.text.x=element_text(face="bold"),
-		axis.title.x=element_text(face="bold"),
-		strip.text.x = element_text(size=20,face="bold",vjust=2))
+## Perform correlations:
 
-quartz("",9,5)
-p + geom_smooth(method="lm",fill="#dc7331",color="black") + geom_point(shape=16,size=4)
-ggsave("plot12.png")
+cor(newsubs)
+cor(subsphon)
 
-## Plot accented vs. argument:
+## Perform significance test on correlations for the 'newsubs' data frame:
 
-p <- ggplot(allsubs,aes(x=Accented,y=Argument)) + 
-	labs(x="\nAccented or not coefficient",y="Last Argument coefficient\n") + 
-	theme_minimal() + theme(axis.text.y=element_text(face="bold"),
-		axis.title.y=element_text(face="bold",size=20),
-		axis.title.x=element_text(face="bold",size=20),
-		axis.text.x=element_text(face="bold"),
-		axis.title.x=element_text(face="bold"),
-		strip.text.x = element_text(size=20,face="bold",vjust=2))
+cor.test(newsubs$Prosody, newsubs$Syntax)
+cor.test(newsubs$Prosody, newsubs$Phonetics)
+cor.test(newsubs$Prosody, newsubs$Freq)
+cor.test(newsubs$Syntax, newsubs$Freq)
+cor.test(newsubs$Phonetics, newsubs$Freq)
+cor.test(newsubs$Syntax, newsubs$Phonetics)
 
-quartz("",9,5)
-p + geom_smooth(method="lm",fill="#dc7331",color="black") + geom_point(shape=16,size=4)
-ggsave("plot13.png")
+## Perform Dunn-Sidak correction:
 
+dunnsidak <- function(P, N) 1 - ((1 - P) ^ N)
+dunnsidak(cor.test(newsubs$Prosody, newsubs$Syntax)$p.val, 6)
+dunnsidak(cor.test(newsubs$Prosody, newsubs$Phonetics)$p.val, 6)
+dunnsidak(cor.test(newsubs$Prosody, newsubs$Freq)$p.val, 6)
+dunnsidak(cor.test(newsubs$Syntax, newsubs$Freq)$p.val, 6)
+dunnsidak(cor.test(newsubs$Phonetics, newsubs$Freq)$p.val, 6)
+dunnsidak(cor.test(newsubs$Syntax, newsubs$Phonetics)$p.val, 6)
 
-## Plot accented vs. argument:
+## Perform significance test on correlations for the 'subsphon' data frame:
 
-p <- ggplot(allsubs,aes(x=Accented,y=Focused)) + 
-	labs(x="\nAccented or not coefficient",y="Focus particle coefficient\n") + 
-	theme_minimal() + theme(axis.text.y=element_text(face="bold"),
-		axis.title.y=element_text(face="bold",size=20),
-		axis.title.x=element_text(face="bold",size=20),
-		axis.text.x=element_text(face="bold"),
-		axis.title.x=element_text(face="bold"),
-		strip.text.x = element_text(size=20,face="bold",vjust=2))
+cor.test(subsphon$Pitch, subsphon$Spectrum)
+cor.test(subsphon$Pitch, subsphon$Duration)
+cor.test(subsphon$Duration, subsphon$Spectrum)
 
-quartz("",9,5)
-p + geom_smooth(method="lm",fill="#dc7331",color="black") + geom_point(shape=16,size=4)
-ggsave("plot14.png")
+## Perform Dunn-Sidak correction:
 
-
-## Multidimensional scaling
-
-d <- dist(allsubs[,-1])
-fit <- cmdscale(d,eig=T,k=2)
-x <- fit$points[,1]
-y <- fit$points[,2]
-quartz("",8,6);par(mai=c(1.5,1.5,0.5,0.5))
-plot(x,y,main="Metric MDS",type="n",xlab="",ylab="",xlim=c(-1.5,4),ylim=c(-2.5,1.5),xaxt="n",yaxt="n")
-axis(side=1,seq(-1.5,4,0.5),font=2,lwd.ticks=3,cex=1.15)
-axis(side=2,seq(-2.5,1.5,0.5),font=2,lwd.ticks=3,las=2,cex=1.15)
-mtext(side=1,line=3,font=2,"Coordinate 1",cex=2)
-mtext(side=2,line=3,font=2,"Coordinate 2",cex=2)
-text(x,y,labels=allsubs$Subject,font=2,cex=1.15)
-box(lwd=3)
-
-## Cluster:
-
-set.seed(42)
-
-## Determine how many clusters are needed:
-
-all_res = c()
-for(i in 2:10){
-	all_res = c(all_res,sum(kmeans(allsubs[,-1],centers=i)$withinss))
-	}
-quartz("",8,6);plot(2:10,all_res,type="b",xlab="Number of clusters")		# not a particularly good fit
-
-## Make a plot of that:
-
-myk <- kmeans(allsubs[,-1],centers=2,nstart=1000)
-
-
+dunnsidak(cor.test(subsphon$Pitch, subsphon$Spectrum)$p.val, 3)
+dunnsidak(cor.test(subsphon$Pitch, subsphon$Duration)$p.val, 3)
+dunnsidak(cor.test(subsphon$Duration, subsphon$Spectrum)$p.val, 3)
 
 

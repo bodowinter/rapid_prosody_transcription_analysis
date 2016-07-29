@@ -3,7 +3,6 @@
 ## July 26, 2016: Finishing brushes and incorporation of spectral tilt
 ## Visualizations of Rapid Prosody Transcription Data
 
-
 ##------------------------------------------------------------------
 ## Load in data and packages:
 ##------------------------------------------------------------------
@@ -223,8 +222,8 @@ xmdl.Vowel.Null <- glmer(Prominence ~ 1 +
 
 RPT$POS_class_c <- as.numeric(RPT$POS_class) - 1.5
 xmdl.POS <- glmer(Prominence ~ POS_class_c +
-	(1|Listener) + (0 + POS_class_c|Listener) +
-	(1|Speaker) + (1|Sentence),	# no word because the variance was conflated with POS(?)
+	(1 + POS_class_c|Listener) + 
+	(1|Speaker) + (1|Sentence),
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 xmdl.POS.Null <- glmer(Prominence ~ 1 +
 	(1 + POS_class|Listener) + 

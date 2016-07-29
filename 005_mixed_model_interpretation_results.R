@@ -63,6 +63,10 @@ LRTs$P_corr <- dunnsidak(LRTs$Pval, N = nrow(LRTs))	# correct for performing N t
 LRTs$Pval <- round(LRTs$Pval, 4)
 LRTs$P_corr <- round(LRTs$P_corr, 4)
 
+## Round LRT values:
+
+LRTs$Chisq <- round(LRTs$Chisq, 1)
+
 
 ##------------------------------------------------------------------
 ## Get predictions for mixed models, continuous variables:
@@ -135,7 +139,7 @@ type_pred <- data.frame(AccentType_c = c('low', 'falling', 'high', 'rising'))
 ## Get predictions for this:
 
 vowel_pred <- predict.glmm(xmdl.Vowel, newdata = vowel_pred, type = 'binomial')
-POS_pred <- predict.glmm(xmdl.POS_class, newdata = POS_pred, type = 'binomial')
+POS_pred <- predict.glmm(xmdl.POS, newdata = POS_pred, type = 'binomial')
 focus_pred <- predict.glmm(xmdl.Focused, newdata = focus_pred, type = 'binomial')
 argument_pred <- predict.glmm(xmdl.argument, newdata = argument_pred, type = 'binomial')
 accented_pred <- predict.glmm(xmdl.Accented, newdata = accented_pred, type = 'binomial')
@@ -243,7 +247,7 @@ axis(side = 2, at = seq(0, 1, 0.5), font = 2, las = 2,
 	lwd = 2, lwd.ticks = 2,
 	cex.axis = 1.5, labels = c('0%', '50%', '100%'))
 mtext(side = 2, '%Prominent', font = 2, line = 5, cex = 2)	
-mtext(side = 3, 'Absolute Pitch Slope', font = 2, line = 0.75, cex = 1.75)
+mtext(side = 3, 'Absolute F0 Slope', font = 2, line = 0.75, cex = 1.75)
 box(lwd = 2)
 ## Second plot:
 plot(1, 1, type = 'n', xaxt = 'n', yaxt = 'n', xlab = '', ylab = '',
@@ -259,7 +263,7 @@ points(all_preds$PitchRangeST_abs_z, all_preds$RangeST_Prominence,
 axis(side = 1, at = seq(-2, 2, 1), lwd = 2, lwd.ticks = 2, labels = F)
 axis(side = 1, at = seq(-2, 2, 1), tick = F, font = 2, cex.axis = 1.25, line = -0.15)
 mtext(side = 1, 'z-scores', font = 2, line = 2.75, cex = 1.75)
-mtext(side = 3, 'Absolute Pitch Range', font = 2, line = 0.75, cex = 1.75)
+mtext(side = 3, 'F0 Range', font = 2, line = 0.75, cex = 1.75)
 box(lwd = 2)
 
 ## Make a plot with all binary categorical variables:

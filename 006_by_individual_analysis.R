@@ -161,6 +161,19 @@ names(diffs) <- rownames(clust_sum)
 # cluster 2 pays more attention to: frequency, POS, focus particle and last argument
 # much less to Accented
 
+## How do cluster 1 and cluster 3 differ?
+
+diffs <- clust_sum$Cluster3 - clust_sum$Cluster1
+names(diffs) <- rownames(clust_sum)
+
+## What is the gender distribution for the clusters?
+
+clust1_names <- rownames(allsubs_clust[[1]])
+clust2_names <- rownames(allsubs_clust[[2]])
+clust3_names <- rownames(allsubs_clust[[3]])
+table(RPT[match(clust1_names, RPT$Listener), ]$ListenerGender)
+table(RPT[match(clust2_names, RPT$Listener), ]$ListenerGender)
+
 ## Validate cluster solution:
 
 this_df <- allsubs[, -1]

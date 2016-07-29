@@ -101,13 +101,14 @@ xmdl.RMS_amplitude.Null <- glmer(Prominence ~ 1 +
 ## Spectral emphasis model and null model (continuous effect):
 
 xmdl.SpectralEmphasis <- glmer(Prominence ~ SpectralEmphasis_z +
-	(1|Listener) + (0 + SpectralEmphasis_z|Listener) + 
+	(1 + SpectralEmphasis_z|Listener) + # could only be estimated this way
 	(1|Speaker) + (1|Sentence),
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 xmdl.SpectralEmphasis.Null <- glmer(Prominence ~ 1 +
-	(1|Listener) + (0 + SpectralEmphasis_z|Listener) + 
+	(1 + SpectralEmphasis_z|Listener) + 
 	(1|Speaker) + (1|Sentence),
 	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
+# correlation value indicates some problems
 
 ## H1-A2 model and null model (continuous effect):
 
@@ -169,26 +170,28 @@ xmdl.NSyll.Null <- glmer(Prominence ~ 1 +
 
 RPT.RangeST <- RPT[complete.cases(RPT$PitchRangeST_abs), ]
 xmdl.RangeST <- glmer(Prominence ~ PitchRangeST_abs_z +
-	(1|Listener) + (0 + PitchRangeST_abs_z|Listener) + 
+	(1 + PitchRangeST_abs_z|Listener) + 
 	(1|Speaker) + (1|Sentence),
-	RPT.RangeST, family = 'binomial')
+	RPT.RangeST, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 xmdl.RangeST.Null = glmer(Prominence ~ 1 +
-	(1|Listener) + (0 + PitchRangeST_abs_z|Listener) + 
+	(1 + PitchRangeST_abs_z|Listener) + 
 	(1|Speaker) + (1|Sentence),
-	RPT.RangeST, family = 'binomial')
+	RPT.RangeST, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
+# correlation indicates a problem
+rm(RPT.RangeST)
 
 ## SlopeST model and null model (continuous effect):
 ## (Computed only based on subset for which there are pitch accents)
 
 RPT.SlopeST <- RPT[complete.cases(RPT$PitchSlopeST_abs), ]
 xmdl.SlopeST <- glmer(Prominence ~ PitchSlopeST_abs_z +
-	(1|Listener) + (0 + PitchSlopeST_abs_z|Listener) + 
+	(1 + PitchSlopeST_abs_z|Listener) + 
 	(1|Speaker) + (1|Sentence),
-	RPT.SlopeST, family = 'binomial')
+	RPT.SlopeST, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 xmdl.SlopeST.Null <- glmer(Prominence ~ 1 +
-	(1|Listener) + (0 + PitchSlopeST_abs_z|Listener) + 
+	(1 + PitchSlopeST_abs_z|Listener) + 
 	(1|Speaker) + (1|Sentence),
-	RPT.SlopeST, family = 'binomial')
+	RPT.SlopeST, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 rm(RPT.SlopeST)
 
 ## Log frequency model and null model (continuous effect):
@@ -206,13 +209,15 @@ xmdl.Freq.Null <- glmer(Prominence ~ 1 +
 
 RPT$Vowel_c <- as.numeric(RPT$Vowel) - 1.5
 xmdl.Vowel <- glmer(Prominence ~ Vowel_c +
-	(1|Listener) + (0 + Vowel_c|Listener) +
+	(1 + Vowel_c|Listener) +		# could only be estimated this way
 	(1|Speaker) + (1|Sentence),
-	RPT, family = 'binomial')
+	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
 xmdl.Vowel.Null <- glmer(Prominence ~ 1 +
-	(1|Listener) + (0 + Vowel_c|Listener) +
+	(1 + Vowel_c|Listener) +
 	(1|Speaker) + (1|Sentence),
-	RPT, family = 'binomial')
+	RPT, family = 'binomial', control = glmerControl(optimizer = 'bobyqa'))
+# there's a perfect slope/intercept correlation indicating some problems with this model
+# since the vowel effect is not significant either way, this does not matter
 
 ## Part of Speech class model and null model (categorical effect, 2 levels):
 

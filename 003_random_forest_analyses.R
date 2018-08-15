@@ -108,7 +108,10 @@ set.seed(42)
 ## Addendum August 15, 2018:
 ## Using ranger means that variable importances are not
 ## conditional variable importances;
-## however, similar results are obtained when using the party package
+## however, similar results are obtained for the most important
+## variables when using the party package (i.e., the main result of
+## accent type / accent position / accentedness being the most important
+## still holds)
 ##------
 
 myforest_KNN <- ranger(myFormula, data = RPT_KNN,
